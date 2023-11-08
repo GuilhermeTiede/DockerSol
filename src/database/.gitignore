@@ -1,0 +1,5 @@
+*.sqlite*
+
+# Logs
+
+node_modules

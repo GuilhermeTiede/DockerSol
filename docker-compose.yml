@@ -48,8 +48,8 @@ services:
 #    depends_on:
 #      - db
 #    environment:
-#      PGADMIN_DEFAULT_EMAIL: guilhermediastiede@gmail.com
-#      PGADMIN_DEFAULT_PASSWORD: 190600
+#      PGADMIN_DEFAULT_EMAIL: your-email
+#      PGADMIN_DEFAULT_PASSWORD: your-password
 
 
 

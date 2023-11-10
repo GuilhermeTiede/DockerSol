@@ -37,10 +37,15 @@ class MotoristasController extends Controller
      */
     public function store(Request $request)
     {
-        // Validar o tamanho dos campos antes de criar um novo motorista
-        if (strlen($request->cpf) !== 11 || strlen($request->cnh) !== 11 || strlen($request->rg) !== 9) {
-            return redirect()->back()->with('error', 'Falha ao cadastrar motorista: Verifique o tamanho dos campos CPF, CNH e RG.');
-        }
+       $request->validate([
+            'nome' => 'required',
+            'cpf' => 'required|digits:11',
+            'cnh' => 'required|digits:11',
+            'rg' => 'required|max:9',
+            'categoriaCnh' => 'required',
+            'telefone' => 'required',
+            'endereco' => 'required',
+        ]);
 
         $created = $this->motorista->create([
             'nome' => $request->nome,
@@ -80,28 +85,35 @@ class MotoristasController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // Validar o tamanho dos campos antes de criar um novo motorista
-        if (strlen($request->cpf) !== 11 || strlen($request->cnh) !== 11 || strlen($request->rg) > 9) {
-            return redirect()->back()->with('error', 'Falha ao editar motorista: Verifique o tamanho dos campos CPF, CNH e RG.');
-        }
+        try {
+            $motorista = $this->motorista->find($id);
 
-        $motorista = $this->motorista->find($id);
+            $request->validate([
+                'nome' => 'required',
+                'cpf' => 'required|digits:11',
+                'cnh' => 'required|digits:11',
+                'rg' => 'required|max:9',
+                'categoriaCnh' => 'required',
+                'telefone' => 'required',
+                'endereco' => 'required',
+            ]);
 
-        $updated = $motorista->update([
-            'nome' => $request->nome,
-            'cpf' => $request->cpf,
-            'cnh' => $request->cnh,
-            'rg' => $request->rg,
-            'categoriaCnh' => $request->categoriaCnh,
-            'telefone' => $request->telefone,
-            'endereco' => $request->endereco,
-            $request->except('_token', '_method')
-        ]);
+            $updated = $motorista->update([
+                'nome' => $request->nome,
+                'cpf' => $request->cpf,
+                'cnh' => $request->cnh,
+                'rg' => $request->rg,
+                'categoriaCnh' => $request->categoriaCnh,
+                'telefone' => $request->telefone,
+                'endereco' => $request->endereco,
+                $request->except('_token', '_method')
+            ]);
 
-        if ($updated) {
-            return redirect()->back()->with('message', 'Motorista atualizado com sucesso!');
-        } else {
-            return redirect()->back()->with('error', 'Falha ao atualizar motorista!');
+            if ($updated) {
+                return redirect()->back()->with('message', 'Motorista atualizado com sucesso!');
+            }
+        }catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
     }
 

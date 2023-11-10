@@ -4,11 +4,6 @@
 @section('button', 'Voltar')
 @section('link', route('contratos.index'))
 
-{{--<script src="{{asset('back/src/scripts/jquery.min.js')}}"></script>--}}
-{{--<!-- Inclua o script da biblioteca Inputmask -->--}}
-{{--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>--}}
-
-
 
 @section('content')
     <div class="pd-20 card-box mb-30">
@@ -46,16 +41,14 @@
             <div class="form-group row">
                 <label class="col-sm-12 col-md-2 col-form-label">NomeContrato</label>
                 <div class="col-sm-12 col-md-10">
-                    <label>
                         <input class="form-control" type="text" name="nomeContrato" placeholder="Nome do Contrato">
-                    </label>
                 </div>
             </div>
 
             <div class="form-group row">
                 <label class="col-sm-12 col-md-2 col-form-label">Numero</label>
                 <div class="col-sm-12 col-md-10">
-                    <input class="form-control" type="text" name="numeroContrato" placeholder="Numero do Contrato">
+                        <input class="form-control" type="text" name="numeroContrato" placeholder="Numero do Contrato">
                 </div>
             </div>
 

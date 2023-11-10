@@ -36,6 +36,14 @@ class FontesPagadorasController extends Controller
      */
     public function store(Request $request)
     {
+        try {
+            $request->validate([
+                'agencia' => 'required',
+                'conta' => 'required',
+                'banco' => 'required',
+                'tipoConta' => 'required',
+                'nomeTitular' => 'required',
+            ]);
         $created = $this->fontePagadora->create([
             'agencia' => $request->agencia,
             'conta' => $request->conta,
@@ -46,8 +54,9 @@ class FontesPagadorasController extends Controller
 
         if ($created) {
             return redirect()->back()->with('message', 'Fonte Pagadora cadastrada com sucesso!');
-        } else {
-            return redirect()->back()->with('error', 'Falha ao cadastrar fonte pagadora!');
+        }
+        }  catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
     }
 
@@ -72,12 +81,24 @@ class FontesPagadorasController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $update  = $this->fontePagadora->find($id)->update($request->except('_token', '_method'));
-        if($update) {
-            return redirect()->back()->with('message', 'Fonte Pagadora atualizada com sucesso!');
-        } else {
-            return redirect()->back()->with('error', 'Falha ao atualizar fonte pagadora!');
+        try {
+            $request->validate([
+                'agencia' => 'required',
+                'conta' => 'required',
+                'banco' => 'required',
+                'tipoConta' => 'required',
+                'nomeTitular' => 'required',
+            ]);
+            $update  = $this->fontePagadora->find($id)->update($request->except('_token', '_method'));
+            if($update) {
+                return redirect()->back()->with('message', 'Fonte Pagadora atualizada com sucesso!');
+            } else {
+                return redirect()->back()->with('error', 'Falha ao atualizar fonte pagadora!');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
+
     }
 
     /**

@@ -94,7 +94,6 @@ class ContratosController extends Controller
      */
     public function edit(Contrato $contrato)
     {
-
         $clientes = Cliente::all();
         return view('contratos.edit', ['contrato' => $contrato],['clientes' => $clientes]);
     }

@@ -36,21 +36,21 @@
             <div class="form-group row">
                 <label class="col-sm-12 col-md-2 col-form-label">Cpf</label>
                 <div class="col-sm-12 col-md-10">
-                    <input class="form-control" type="text" id="cpf" name="cpf" placeholder="Digite Somente os Números">
+                    <input class="form-control" type="text" id="cpf" name="cpf" placeholder="Digite Somente os Números" maxlength="11">
                 </div>
             </div>
 
             <div class="form-group row">
                 <label class="col-sm-12 col-md-2 col-form-label">Rg</label>
                 <div class="col-sm-12 col-md-10">
-                    <input class="form-control" type="text" id="rg" name="rg" placeholder="Digite Somente os Números">
+                    <input class="form-control" type="text" id="rg" name="rg" placeholder="Digite Somente os Números" maxlength="9">
                 </div>
             </div>
 
             <div class="form-group row">
                 <label class="col-sm-12 col-md-2 col-form-label">Número da CNH</label>
                 <div class="col-sm-12 col-md-10">
-                    <input class="form-control" type="text" id="cnh" name="cnh" placeholder="Digite Somente os Números">
+                    <input class="form-control" type="text" id="cnh" name="cnh" placeholder="Digite Somente os Números" maxlength="11">
                 </div>
             </div>
 

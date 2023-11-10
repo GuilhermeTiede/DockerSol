@@ -15,11 +15,16 @@
             </div>
         </div>
 
-    @if(session()->has('message'))
-        <div class="alert alert-success">
-            {{ session()->get('message') }}
-        </div>
-    @endif
+        @if(session()->has('message'))
+            <div class="alert alert-success">
+                {{ session()->get('message') }}
+            </div>
+        @elseif (session()->has('error'))
+            <div class="alert alert-danger">
+                {{ session()->get('error') }}
+            </div>
+        @endif
+
     <form id="deleteEmpresa" action="{{route('fontespagadoras.update',['fontepagadora'=>$fontepagadora->id])}}" method="post">
         @csrf
         <input type="hidden" name="_method" value="PUT">

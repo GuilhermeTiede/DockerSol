@@ -21,7 +21,7 @@
                 <label><input type="hidden" name="contrato_id" value="{{$contrato->id }}">
                 <input class="form-control-file" type="file" name="documento">
                 </label>
-                <button type="submit" class="btn btn-danger">Anexar</button>
+                <button type="submit" class="btn btn-primary">Anexar</button>
             </div>
         </div>
     </form>

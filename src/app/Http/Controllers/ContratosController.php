@@ -19,9 +19,6 @@ class ContratosController extends Controller
         return view('contratos.index', ['contratos' => $contratos]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(Contrato $contratos)
     {
         //
@@ -35,31 +32,43 @@ class ContratosController extends Controller
     public function store(Request $request)
     {
 
-        // Obtenha o valor formatado do campo 'valorOrdemServico'
-        $valorFormatado = $request->input('valorContrato');
+        try {
 
-        // Remova o prefixo 'R$ ' e substitua vírgulas por pontos
-        $valorFormatado = str_replace(['.', ','], ['', '.'], $valorFormatado);
+            $request->validate([
+                'nomeContrato' => 'required',
+                'numeroContrato' => 'required',
+                'dataInicio' => 'required',
+                'dataFim' => 'required',
+                'valorContrato' => 'required',
+                'cliente_id' => 'required',
+            ]);
 
-        // Converta o valor para um tipo numérico
-        $valorNumerico = (float) $valorFormatado;
+            // Obtenha o valor formatado do campo 'valorOrdemServico'
+            $valorFormatado = $request->input('valorContrato');
 
-        $created = $this->contrato->create([
-            'nomeContrato'=> $request->nomeContrato,
-            'numeroContrato' => $request->numeroContrato,
-            'dataInicio' => $request->dataInicio,
-            'dataFim' => $request->dataFim,
-            'valorContrato' => $valorNumerico,
-            'seguroGarantia' => $request->seguroGarantia,
-            'responsabilidadeTecnica' => $request->responsabilidadeTecnica,
-            'observacao' => $request->observacao,
-            'cliente_id' => $request->cliente_id,
-        ]);
+            // Remova o prefixo 'R$ ' e substitua vírgulas por pontos
+            $valorFormatado = str_replace(['.', ','], ['', '.'], $valorFormatado);
 
-        if ($created) {
-            return redirect()->back()->with('message', 'Contrato cadastrado com sucesso!');
-        } else {
-            return redirect()->back()->with('error', 'Falha ao cadastrar contrato!');
+            // Converta o valor para um tipo numérico
+            $valorNumerico = (float)$valorFormatado;
+
+            $created = $this->contrato->create([
+                'nomeContrato' => $request->nomeContrato,
+                'numeroContrato' => $request->numeroContrato,
+                'dataInicio' => $request->dataInicio,
+                'dataFim' => $request->dataFim,
+                'valorContrato' => $valorNumerico,
+                'seguroGarantia' => $request->seguroGarantia,
+                'responsabilidadeTecnica' => $request->responsabilidadeTecnica,
+                'observacao' => $request->observacao,
+                'cliente_id' => $request->cliente_id,
+            ]);
+
+            if ($created) {
+                return redirect()->back()->with('message', 'Contrato cadastrado com sucesso!');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
     }
 

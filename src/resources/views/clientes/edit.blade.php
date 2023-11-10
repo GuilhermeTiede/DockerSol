@@ -16,9 +16,11 @@
             <div class="alert alert-success">
                 {{ session()->get('message') }}
             </div>
+        @elseif (session()->has('error'))
+            <div class="alert alert-danger">
+                {{ session()->get('error') }}
+            </div>
         @endif
-
-
 
         <form id="editEmpresa" action="{{route('clientes.update',['cliente'=>$cliente->id])}}" method="post">
             @csrf

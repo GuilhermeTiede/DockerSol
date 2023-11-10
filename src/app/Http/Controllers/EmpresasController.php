@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Empresa;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class EmpresasController extends Controller
 {
@@ -35,24 +36,36 @@ class EmpresasController extends Controller
      */
     public function store(Request $request)
     {
-        // Validação personalizada para verificar se o CNPJ já existe
-        $cnpjExistente = $this->empresa->where('cnpj', $request->cnpj)->exists();
+        try {
+            // Validação personalizada para verificar se o CNPJ já existe
+            $cnpjExistente = $this->empresa->where('cnpj', $request->cnpj)->exists();
 
-        if ($cnpjExistente) {
-            return redirect()->back()->with('error', 'Já existe uma empresa com este CNPJ.');
+            if ($cnpjExistente) {
+                throw ValidationException::withMessages(['cnpj' => 'Já existe uma empresa com este CNPJ.']);
+            }
+
+            $request->validate([
+                'nome' => 'required',
+                'cnpj' => 'required',
+                'endereco' => 'required',
+            ]);
+
+            //nome is required
+            $created = $this->empresa->create([
+                'nome' => $request->nome,
+                'cnpj' => $request->cnpj,
+                'endereco' => $request->endereco,
+            ]);
+
+            if ($created) {
+                return redirect()->back()->with('message', 'Empresa cadastrada com sucesso!');
+            } else {
+                return redirect()->back()->with('error', 'Falha ao cadastrar empresa!');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
 
-        $created = $this->empresa->create([
-            'nome' => $request->nome,
-            'cnpj' => $request->cnpj,
-            'endereco' => $request->endereco,
-        ]);
-
-        if ($created) {
-            return redirect()->back()->with('message', 'Empresa cadastrada com sucesso!');
-        } else {
-            return redirect()->back()->with('error', 'Falha ao cadastrar empresa!');
-        }
     }
 
     /**
@@ -71,12 +84,15 @@ class EmpresasController extends Controller
         return view('empresas.empresas_edit', ['empresa' => $empresa]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, string $id)
     {
-
+        try {
+        $request->validate([
+            'nome' => 'required',
+            'cnpj' => 'required',
+            'endereco' => 'required',
+        ]);
 
         $update = $this->empresa->find($id)->update($request->except('_token', '_method'));
 
@@ -84,6 +100,9 @@ class EmpresasController extends Controller
             return redirect()->back()->with('message', 'Empresa atualizada com sucesso!');
         } else {
             return redirect()->back()->with('error', 'Falha ao atualizar empresa!');
+        }
+        }catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
 
     }
@@ -95,8 +114,5 @@ class EmpresasController extends Controller
     {
         $delete = $this->empresa->find($id)->delete();
         return redirect()->route('empresas.index');
-
-
-
     }
 }

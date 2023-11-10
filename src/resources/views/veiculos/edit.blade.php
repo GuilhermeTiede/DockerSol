@@ -18,6 +18,10 @@
             <div class="alert alert-success">
                 {{ session()->get('message') }}
             </div>
+        @elseif (session()->has('error'))
+            <div class="alert alert-danger">
+                {{ session()->get('error') }}
+            </div>
         @endif
 
         <form id="createVeiculos" action="{{route('veiculos.update',['veiculo'=>$veiculo->id])}}" method="post">
@@ -39,21 +43,21 @@
             <div class="form-group row">
                 <label class="col-sm-12 col-md-2 col-form-label">Placa</label>
                 <div class="col-sm-12 col-md-10">
-                    <input class="form-control" type="text" name="placa" value="{{$veiculo->placa}}">
+                    <input class="form-control" type="text" name="placa" value="{{$veiculo->placa}}" maxlength="7">
                 </div>
             </div>
 
             <div class="form-group row">
                 <label class="col-sm-12 col-md-2 col-form-label">Renavam</label>
                 <div class="col-sm-12 col-md-10">
-                    <input class="form-control" type="text" name="renavam" value="{{$veiculo->renavam}}">
+                    <input class="form-control" type="text" name="renavam" value="{{$veiculo->renavam}}" maxlength="11">
                 </div>
             </div>
 
             <div class="form-group row">
                 <label class="col-sm-12 col-md-2 col-form-label">Chassi</label>
                 <div class="col-sm-12 col-md-10">
-                    <input class="form-control" type="text" name="chassi" value="{{$veiculo->chassi}}">
+                    <input class="form-control" type="text" name="chassi" value="{{$veiculo->chassi}}" maxlength="17">
                 </div>
             </div>
 

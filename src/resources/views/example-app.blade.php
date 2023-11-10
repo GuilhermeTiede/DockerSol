@@ -31,6 +31,9 @@
         // Crie um objeto para armazenar a soma por mês
         var dataPorMes = {};
 
+        // Variável para armazenar o total pendente
+        var totalPendente = 0;
+
         // Itere sobre os dados originais e some os valores de "Pago" e "Pendente" por mês
         data.forEach(function (item) {
             var mesAno = item.mes; // Mantenha a data no formato original
@@ -39,6 +42,9 @@
                 dataPorMes[mesAno] = 0;
             }
             dataPorMes[mesAno] += parseFloat(item.pago) + parseFloat(item.pendente); // Somar valores de Pago e Pendente
+
+            // Adicione o valor pendente à variável totalPendente
+            totalPendente += parseFloat(item.pendente);
         });
 
         // Crie um array de objetos no formato esperado pelo ApexCharts
@@ -46,6 +52,7 @@
             return dataPorMes[mesAno];
         });
 
+        // Defina o valor do eixo Y fora do loop
         var options10 = {
             series: [{
                 name: 'Faturamento',
@@ -85,8 +92,9 @@
                     text: 'Faturamento por mês',
                 },
                 labels: {
-                    formatter: function (value) {
-                        return 'R$ ' + value.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                    formatter: function () {
+                        // Use a variável totalPendente como valor para o eixo Y
+                        return 'R$ ' + totalPendente.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
                     }
                 }
             },
@@ -113,6 +121,9 @@
         var chart = new ApexCharts(document.querySelector("#chart10"), options10);
         chart.render();
     </script>
+
+
+
 
 
 
@@ -204,12 +215,5 @@
         var chart11 = new ApexCharts(document.querySelector("#chart11"), options11);
         chart11.render();
     </script>
-
-
-
-
-
-
-
 @endsection
 

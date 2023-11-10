@@ -37,30 +37,43 @@ class VeiculosController extends Controller
      */
     public function store(Request $request)
     {
-        $created = $this->veiculo->create([
-            'id_motorista' => $request->id_motorista,
-            'placa' => $request->placa,
-            'renavam' => $request->renavam,
-            'chassi' => $request->chassi,
-            'modelo' => $request->modelo,
-            'marca' => $request->marca,
-            'ano' => $request->ano,
-            'cor' => $request->cor,
-            'tipoCombustivel' => $request->tipoCombustivel,
-            'tipoVeiculo' => $request->tipoVeiculo,
-            'categoriaVeiculo' => $request->categoriaVeiculo,
-        ]);
+        try {
+            $request->validate([
+                'id_motorista' => 'required',
+                'placa' => 'required:digits:7',
+                'renavam' => 'required|max:11',
+                'chassi' => 'required|max:17',
+                'modelo' => 'required',
+                'marca' => 'required',
+                'ano' => 'required',
+                'cor' => 'required',
+                'tipoCombustivel' => 'required',
+                'tipoVeiculo' => 'required',
+                'categoriaVeiculo' => 'required',
+            ]);
 
-        if ($created) {
-            return redirect()->back()->with('message', 'Veiculo cadastrado com sucesso!');
-        } else {
-            return redirect()->back()->with('error', 'Falha ao cadastrar veiculo!');
+            $created = $this->veiculo->create([
+                'id_motorista' => $request->id_motorista,
+                'placa' => $request->placa,
+                'renavam' => $request->renavam,
+                'chassi' => $request->chassi,
+                'modelo' => $request->modelo,
+                'marca' => $request->marca,
+                'ano' => $request->ano,
+                'cor' => $request->cor,
+                'tipoCombustivel' => $request->tipoCombustivel,
+                'tipoVeiculo' => $request->tipoVeiculo,
+                'categoriaVeiculo' => $request->categoriaVeiculo,
+            ]);
+
+            if ($created) {
+                return redirect()->back()->with('message', 'Veiculo cadastrado com sucesso!');
+            }
+        }catch (\Exception $e){
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Veiculo $veiculo)
     {
         $motoristas = Motorista::all();
@@ -81,12 +94,28 @@ class VeiculosController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $updated = $this->veiculo->find($id)->update($request->except('_token', '_method'));
-        if($updated){
-            return redirect()->back()->with('message', 'Veiculo atualizado com sucesso!');
-        }else{
-            return redirect()->back()->with('error', 'Falha ao atualizar veiculo!');
+        try {
+            $request->validate([
+                'placa' => 'required:digits:7',
+                'renavam' => 'required|max:11',
+                'chassi' => 'required|max:17',
+                'modelo' => 'required',
+                'marca' => 'required',
+                'ano' => 'required',
+                'cor' => 'required',
+                'tipoCombustivel' => 'required',
+                'tipoVeiculo' => 'required',
+                'categoriaVeiculo' => 'required',
+            ]);
+            $updated = $this->veiculo->find($id)->update($request->except('_token', '_method'));
+            if($updated) {
+                return redirect()->back()->with('message', 'Veiculo atualizado com sucesso!');
+            }
+        }catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
         }
+
+
     }
 
     /**

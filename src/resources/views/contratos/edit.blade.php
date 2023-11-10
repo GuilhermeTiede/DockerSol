@@ -22,6 +22,10 @@
             <div class="alert alert-success">
                 {{ session()->get('message') }}
             </div>
+        @elseif (session()->has('error'))
+            <div class="alert alert-danger">
+                {{ session()->get('error') }}
+            </div>
         @endif
 
         <form id="editContrato" action="{{route('contratos.update',['contrato'=>$contrato->id])}}" method="post">

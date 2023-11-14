@@ -308,13 +308,13 @@
                                 ><span class="mtext">Cadastros</span>
                     </a>
                     <ul class="submenu">
+                        <li><a href="{{route('empresas.index')}}">Empresas</a></li>
                         <li>
                             <a href="{{route('clientes.index')}}">Clientes</a>
                         </li>
                         <li><a href="{{route('contratos.index')}}">Contratos</a></li>
                         <li><a href="{{route('fontespagadoras.index')}}">Fonte Pagadora</a></li>
                         <li><a href="{{route('veiculos.index')}}">Veiculos</a></li>
-                        <li><a href="{{route('empresas.index')}}">Empresas</a></li>
                         <li><a href="{{route('motoristas.index')}}">Motoristas</a></li>
                     </ul>
                 </li>

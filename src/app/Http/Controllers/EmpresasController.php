@@ -51,7 +51,7 @@ class EmpresasController extends Controller
             ]);
 
             //nome is required
-            $created = $this->empresa->create([
+            $created = Empresa::create([
                 'nome' => $request->nome,
                 'cnpj' => $request->cnpj,
                 'endereco' => $request->endereco,
@@ -59,13 +59,11 @@ class EmpresasController extends Controller
 
             if ($created) {
                 return redirect()->back()->with('message', 'Empresa cadastrada com sucesso!');
-            } else {
-                return redirect()->back()->with('error', 'Falha ao cadastrar empresa!');
             }
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
-
+        return redirect()->back()->with('error', 'Falha ao cadastrar empresa!')->withInput();
     }
 
     /**
@@ -98,8 +96,6 @@ class EmpresasController extends Controller
 
         if($update) {
             return redirect()->back()->with('message', 'Empresa atualizada com sucesso!');
-        } else {
-            return redirect()->back()->with('error', 'Falha ao atualizar empresa!');
         }
         }catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage())->withInput();
@@ -113,6 +109,10 @@ class EmpresasController extends Controller
     public function destroy(string $id)
     {
         $delete = $this->empresa->find($id)->delete();
-        return redirect()->route('empresas.index');
+        if($delete) {
+            return redirect()->back()->with('message', 'Empresa excluída com sucesso!');
+        } else {
+            return redirect()->back()->with('error', 'Falha ao excluir empresa!');
+        }
     }
 }

@@ -6,7 +6,7 @@ services:
     container_name: nginxsol
     image: nginx:alpine
     ports:
-      - "8080:80"
+      - "80:80"
     depends_on:
       - app
       - db
@@ -40,16 +40,16 @@ services:
     working_dir: /var/www
 
 
-#  pgadmin:
-#    container_name: pgadminsol
-#    image: dpage/pgadmin4
-#    ports:
-#      - "5050:80"
-#    depends_on:
-#      - db
-#    environment:
-#      PGADMIN_DEFAULT_EMAIL: your-email
-#      PGADMIN_DEFAULT_PASSWORD: your-password
+  pgadmin:
+    container_name: pgadminsol
+    image: dpage/pgadmin4
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: guilhermediastiede@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: Soluminar@123
 
 
 

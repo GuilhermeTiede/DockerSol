@@ -1,4 +1,4 @@
-FROM php:8.2.11-fpm
+FROM php:8.2-fpm
 
 # Install composer
 RUN echo "\e[1;33mInstall COMPOSER\e[0m"
@@ -32,6 +32,13 @@ RUN apt-get -y install --fix-missing \
     libonig-dev \
     libxml2-dev
 
+# Install Postgre PDO
+RUN apt-get install -y libpq-dev \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pdo pdo_pgsql pgsql
+
+
+
 # RUN echo "\e[1;33mInstall important docker dependencies\e[0m"
 # RUN docker-php-ext-install \
 #     exif \
@@ -48,8 +55,3 @@ RUN apt-get -y install --fix-missing \
 #     bz2 \
 #     zip \
 #     intl
-
-# Install Postgre PDO
-RUN apt-get install -y libpq-dev \
-    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
-    && docker-php-ext-install pdo pdo_pgsql pgsql

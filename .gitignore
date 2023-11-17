@@ -6,7 +6,7 @@ node_modules/
 _ide_helper.php
 /storage/*.key
 /vendor
-.env
+
 .env.backup
 
 .phpunit.result.cache

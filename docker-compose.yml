@@ -6,20 +6,20 @@ services:
     container_name: nginxsol
     image: nginx:alpine
     ports:
-      - "8080:80"
+      - "78.142.242.175:8080:80"
     depends_on:
       - app
       - db
     volumes:
       - ./src:/var/www
       - ./nginx/conf.d/:/etc/nginx/conf.d
-
-
+    networks:
+        - mynetwork
   db:
     image: postgres
     container_name: pgsqlsol
     ports:
-      - "5433:5432"
+      - "78.142.242.175:5433:5432"
     volumes:
         - ./pgsql/data:/var/lib/postgresql/data
     environment:
@@ -36,20 +36,8 @@ services:
     volumes:
         - ./src:/var/www
     ports:
-        - "9000:9000"
+        - "78.142.242.175:9000:9000"
     working_dir: /var/www
-
-
-#  pgadmin:
-#    container_name: pgadminsol
-#    image: dpage/pgadmin4
-#    ports:
-#      - "5050:80"
-#    depends_on:
-#      - db
-#    environment:
-#      PGADMIN_DEFAULT_EMAIL: guilhermediastiede@gmail.com
-#      PGADMIN_DEFAULT_PASSWORD: Soluminar@123
 
 
 

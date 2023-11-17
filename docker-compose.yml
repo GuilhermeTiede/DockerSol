@@ -13,8 +13,6 @@ services:
     volumes:
       - ./src:/var/www
       - ./nginx/conf.d/:/etc/nginx/conf.d
-    networks:
-        - mynetwork
   db:
     image: postgres
     container_name: pgsqlsol

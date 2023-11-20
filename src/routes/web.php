@@ -151,5 +151,6 @@ Route::middleware([
     Route::get('/painelcontrole', [PainelControleController::class, 'index'])->name('painelcontrole.index');
     Route::get('/painelcontrole/mensal', [PainelControleController::class, 'finMensal'])->name('painelcontrole.mensal');
     Route::put('/painelcontrole/{contrato}', [PainelControleController::class, 'update'])->name('painelcontrole.update');
+
 });
 

@@ -22,38 +22,157 @@ class PainelControleController extends Controller
         $this->painel = new PainelControle();
     }
 
+//    public function index()
+//    {
+//        // Recupere todos os clientes
+//        $clientes = Cliente::all();
+//
+//
+//        // Inicialize um array para armazenar os dados do Painel de Controle
+//        $dadosPainel = [];
+//
+//
+//        // Itere sobre cada cliente para calcular os dados
+//        foreach ($clientes as $cliente) {
+//
+//            // Verifique se já existe um registro na tabela para este cliente
+//            $painelControle = PainelControle::firstOrNew(['contrato' => $cliente->nome]);
+//
+//            // Se o valor de "A Receber Previsão" não estiver definido, use o valor padrão
+//            if ($painelControle->a_receber_previsao === null) {
+//                $aReceberPrevisao = 1; // Substitua pelo valor real
+//            } else {
+//                $aReceberPrevisao = $painelControle->a_receber_previsao;
+//            }
+//
+//            // Recupere todos os contratos vinculados a este cliente
+//            $contratos = Contrato::where('cliente_id', $cliente->id)->get();
+//
+//            // Inicialize as variáveis de despesas e recebimento para cada cliente
+//            $despesasCliente = 0;
+//            $recebimentoCliente = 0;
+//
+//            // Itere sobre os contratos deste cliente para calcular despesas e recebimento
+//            foreach ($contratos as $contrato) {
+//                // Recupere as ordens de serviço vinculadas a este contrato
+//                $ordensServico = OrdemServico::where('contrato_id', $contrato->id)->get();
+//
+//                // Recupere os IDs das ordens de serviço
+//                $idsOrdemServico = $ordensServico->pluck('id')->toArray();
+//
+//                // Calcule as despesas para este contrato
+//                $despesas = FluxoCaixa::whereIn('id_ordemServico', $idsOrdemServico)
+//                    ->where('tipo', 'saida')
+//                    ->sum('valor');
+//
+//                // Calcule o recebimento para este contrato
+//                $recebimento = FluxoCaixa::whereIn('id_ordemServico', $idsOrdemServico)
+//                    ->where('tipo', 'entrada')
+//                    ->sum('valor');
+//
+//                // Some as despesas e o recebimento para este cliente
+//                $despesasCliente += $despesas;
+//                $recebimentoCliente += $recebimento;
+//            }
+//
+//
+//            // Recupere todas as notas vinculadas a este cliente
+//            $notas = NotaFiscal::where('cnpj_tomador', $cliente->cnpj)->orWhere('nome_tomador', $cliente->nome)->get();
+//
+//            // Recupere os IDs das notas vinculadas a este cliente
+//            $idsNotas = $notas->pluck('id')->toArray();
+//
+//            // Verifique o status das notas na tabela status_notas
+//            $statusNotasPendentes = StatusNota::whereIn('nota_id', $idsNotas)
+//                ->where('status', 'Pendente')
+//                ->get();
+//
+//            // Inicialize a variável para armazenar o valor total das notas pendentes
+//            $valorNFEmitida = 0;
+//
+//            // Itere sobre a coleção de objetos StatusNota pendentes
+//            foreach ($statusNotasPendentes as $statusNota) {
+//                // Recupere o ID da nota associada a este objeto
+//                $notaId = $statusNota->nota_id;
+//
+//                // Consulte a tabela notasfiscais para obter o valor total da nota
+//                $notaFiscal = NotaFiscal::find($notaId);
+//
+//                if ($notaFiscal) {
+//                    // Adicione o valor total da nota à variável
+//                    $valorNFEmitida += $notaFiscal->valorTotal;
+//                    //dd($notaFiscal->valorTotal);
+//                }
+//            }
+//
+//            // Calcule o lucro, faturamento total e margem de lucro para este cliente
+//            $lucro = $recebimentoCliente + $aReceberPrevisao + $valorNFEmitida - $despesasCliente;
+//            $faturamentoTotal = $recebimentoCliente + $valorNFEmitida + $aReceberPrevisao;
+//            $margemLucro = ($lucro / $faturamentoTotal) * 100;
+//
+//            // Adicione os dados do cliente e contratos ao array
+//            $dadosPainel[] = [
+//                'id'=> $cliente->id,
+//                'cliente' => $cliente->nome,
+//                'despesas' => $despesasCliente,
+//                'recebimento' => $recebimentoCliente,
+//                'a_receber_previsao' => $aReceberPrevisao,
+//                'valor_nf_emitida' => $valorNFEmitida,
+//                'lucro' => $lucro,
+//                'faturamento_total' => $faturamentoTotal,
+//                'margem_lucro' => $margemLucro,
+//            ];
+//
+//
+//            $painelControle->despesas = $despesasCliente;
+//            $painelControle->recebimento = $recebimentoCliente;
+//            $painelControle->a_receber_previsao = $aReceberPrevisao;
+//            $painelControle->valor_nf_emitida = $valorNFEmitida;
+//            $painelControle->lucro = $lucro;
+//            $painelControle->faturamento_total = $faturamentoTotal;
+//            $painelControle->margem_lucro = $margemLucro;
+//
+//            $painelControle->save();
+//
+//        }
+//
+//        return view('painelcontrole.index', [
+//            'dadosPainel' => $dadosPainel
+//        ]);
+//    }
+
     public function index()
     {
         // Recupere todos os clientes
         $clientes = Cliente::all();
 
-
         // Inicialize um array para armazenar os dados do Painel de Controle
         $dadosPainel = [];
 
-        //$aReceberPrevisao = 1;
-
         // Itere sobre cada cliente para calcular os dados
         foreach ($clientes as $cliente) {
-            // Verifique se já existe um registro na tabela para este cliente
-            $painelControle = PainelControle::firstOrNew(['contrato' => $cliente->nome]);
-
-            // Se o valor de "A Receber Previsão" não estiver definido, use o valor padrão
-            if ($painelControle->a_receber_previsao === null) {
-                $aReceberPrevisao = 1; // Substitua pelo valor real
-            } else {
-                $aReceberPrevisao = $painelControle->a_receber_previsao;
-            }
 
             // Recupere todos os contratos vinculados a este cliente
             $contratos = Contrato::where('cliente_id', $cliente->id)->get();
 
-            // Inicialize as variáveis de despesas e recebimento para cada cliente
-            $despesasCliente = 0;
-            $recebimentoCliente = 0;
 
-            // Itere sobre os contratos deste cliente para calcular despesas e recebimento
+
+
+            // Inicialize as variáveis de despesas e recebimento para cada cliente
+
             foreach ($contratos as $contrato) {
+                // Verifique se já existe um registro na tabela para este cliente
+                $painelControle = PainelControle::firstOrNew(['contrato' => $contrato->nomeContrato]);
+
+                // Se o valor de "A Receber Previsão" não estiver definido, use o valor padrão
+                if ($painelControle->a_receber_previsao === null) {
+                    $aReceberPrevisao = 1; // Substitua pelo valor real
+                } else {
+                    $aReceberPrevisao = $painelControle->a_receber_previsao;
+                }
+
+                $despesasCliente = 0;
+                $recebimentoCliente = 0;
                 // Recupere as ordens de serviço vinculadas a este contrato
                 $ordensServico = OrdemServico::where('contrato_id', $contrato->id)->get();
 
@@ -73,67 +192,66 @@ class PainelControleController extends Controller
                 // Some as despesas e o recebimento para este cliente
                 $despesasCliente += $despesas;
                 $recebimentoCliente += $recebimento;
-            }
 
+                // Recupere todas as notas vinculadas a este cliente
+                $notas = NotaFiscal::where('cnpj_tomador', $cliente->cnpj)->orWhere('nome_tomador', $cliente->nome)->get();
 
-            // Recupere todas as notas vinculadas a este cliente
-            $notas = NotaFiscal::where('cnpj_tomador', $cliente->cnpj)->orWhere('nome_tomador', $cliente->nome)->get();
+                // Recupere os IDs das notas vinculadas a este cliente
+                $idsNotas = $notas->pluck('id')->toArray();
 
-            // Recupere os IDs das notas vinculadas a este cliente
-            $idsNotas = $notas->pluck('id')->toArray();
+                // Verifique o status das notas na tabela status_notas
+                $statusNotasPendentes = StatusNota::whereIn('nota_id', $idsNotas)
+                    ->where('status', 'Pendente')
+                    ->get();
 
-            // Verifique o status das notas na tabela status_notas
-            $statusNotasPendentes = StatusNota::whereIn('nota_id', $idsNotas)
-                ->where('status', 'Pendente')
-                ->get();
+                // Inicialize a variável para armazenar o valor total das notas pendentes
+                $valorNFEmitida = 0;
 
-            // Inicialize a variável para armazenar o valor total das notas pendentes
-            $valorNFEmitida = 0;
+                // Itere sobre a coleção de objetos StatusNota pendentes
+                foreach ($statusNotasPendentes as $statusNota) {
+                    // Recupere o ID da nota associada a este objeto
+                    $notaId = $statusNota->nota_id;
 
-            // Itere sobre a coleção de objetos StatusNota pendentes
-            foreach ($statusNotasPendentes as $statusNota) {
-                // Recupere o ID da nota associada a este objeto
-                $notaId = $statusNota->nota_id;
+                    // Consulte a tabela notasfiscais para obter o valor total da nota
+                    $notaFiscal = NotaFiscal::find($notaId);
 
-                // Consulte a tabela notasfiscais para obter o valor total da nota
-                $notaFiscal = NotaFiscal::find($notaId);
-
-                if ($notaFiscal) {
-                    // Adicione o valor total da nota à variável
-                    $valorNFEmitida += $notaFiscal->valorTotal;
-                    //dd($notaFiscal->valorTotal);
+                    if ($notaFiscal) {
+                        // Adicione o valor total da nota à variável
+                        $valorNFEmitida += $notaFiscal->valorTotal;
+                        //dd($notaFiscal->valorTotal);
+                    }
                 }
+
+
+                // Calcule o lucro, faturamento total e margem de lucro para este cliente
+                $lucro = $recebimentoCliente + $aReceberPrevisao + $valorNFEmitida - $despesasCliente;
+                $faturamentoTotal = $recebimentoCliente + $valorNFEmitida + $aReceberPrevisao;
+                $margemLucro = ($lucro / $faturamentoTotal) * 100;
+
+                $painelControle->despesas = $despesasCliente;
+                $painelControle->recebimento = $recebimentoCliente;
+                $painelControle->a_receber_previsao = $aReceberPrevisao;
+                $painelControle->valor_nf_emitida = $valorNFEmitida;
+                $painelControle->lucro = $lucro;
+                $painelControle->faturamento_total = $faturamentoTotal;
+                $painelControle->margem_lucro = $margemLucro;
+
+                $painelControle->save();
+
+                // Adicione os dados do cliente e contratos ao array
+                $dadosPainel[] = [
+                    'id'=> $contrato->id,
+                    'cliente' => $cliente->nome,
+                    'contrato' => $contrato->nomeContrato,
+                    'despesas' => $despesasCliente,
+                    'recebimento' => $recebimentoCliente,
+                    'a_receber_previsao' => $aReceberPrevisao,
+                    'valor_nf_emitida' => $valorNFEmitida,
+                    'lucro' => $lucro,
+                    'faturamento_total' => $faturamentoTotal,
+                    'margem_lucro' => $margemLucro,
+                ];
             }
-
-            // Calcule o lucro, faturamento total e margem de lucro para este cliente
-            $lucro = $recebimentoCliente + $aReceberPrevisao + $valorNFEmitida - $despesasCliente;
-            $faturamentoTotal = $recebimentoCliente + $valorNFEmitida + $aReceberPrevisao;
-            $margemLucro = ($lucro / $faturamentoTotal) * 100;
-
-            // Adicione os dados do cliente e contratos ao array
-            $dadosPainel[] = [
-                'id'=> $cliente->id,
-                'cliente' => $cliente->nome,
-                'despesas' => $despesasCliente,
-                'recebimento' => $recebimentoCliente,
-                'a_receber_previsao' => $aReceberPrevisao,
-                'valor_nf_emitida' => $valorNFEmitida,
-                'lucro' => $lucro,
-                'faturamento_total' => $faturamentoTotal,
-                'margem_lucro' => $margemLucro,
-            ];
-
-
-            $painelControle->despesas = $despesasCliente;
-            $painelControle->recebimento = $recebimentoCliente;
-            $painelControle->a_receber_previsao = $aReceberPrevisao;
-            $painelControle->valor_nf_emitida = $valorNFEmitida;
-            $painelControle->lucro = $lucro;
-            $painelControle->faturamento_total = $faturamentoTotal;
-            $painelControle->margem_lucro = $margemLucro;
-
-            $painelControle->save();
-
         }
 
         return view('painelcontrole.index', [
@@ -150,9 +268,8 @@ class PainelControleController extends Controller
 
     public function update(Request $request, $contratoId)
     {
-        // Recupere o contrato com base no cliente_id
-        $contrato = Contrato::where('cliente_id', $contratoId)->first();
-
+        // Recupere o contrato com base no ID
+        $contrato = Contrato::find($contratoId);
 
         if (!$contrato) {
             return redirect()->route('painelcontrole.index')->with('error', 'Contrato não encontrado.');
@@ -160,12 +277,11 @@ class PainelControleController extends Controller
 
         $cliente = $contrato->cliente;
 
-
-
         // Verifique o cliente e faça as atualizações necessárias na tabela PainelControle
         if ($cliente) {
-            // Por exemplo, para atualizar "A Receber Previsão" na tabela PainelControle
-            $painelControle = PainelControle::where('contrato', $cliente->nome)->first();
+            // Busque o PainelControle associado ao contrato pelo nome do contrato
+            $painelControle = PainelControle::where('contrato', $contrato->nomeContrato)->first();
+
 
             if ($painelControle) {
                 // Obtenha o valor formatado do campo 'valorOrdemServico'
@@ -371,6 +487,7 @@ class PainelControleController extends Controller
         ];
 
         foreach ($meses as $mes => $mesNumero) {
+
             $faturamento = NotaFiscal::whereMonth('dataEmissao', '=', $mesNumero)
                 ->whereYear('dataEmissao','=', $anoAtual)
                 ->sum('valorTotal');

@@ -19,53 +19,52 @@ $('document').ready(function(){
 		},
 	});
 
-    $.fn.dataTable.ext.type.order['month-order'] = function (data) {
-        var monthOrder = {
-            "Janeiro": 1,
-            "Fevereiro": 2,
-            "Marco": 3,
-            "Abril": 4,
-            "Maio": 5,
-            "Junho": 6,
-            "Julho": 7,
-            "Agosto": 8,
-            "Setembro": 9,
-            "Outubro": 10,
-            "Novembro": 11,
-            "Dezembro": 12
-        };
-        return monthOrder[data];
+
+    // Função para obter o índice do mês em português
+    function getIndexForPortugueseMonth(month) {
+        var monthArr = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        return monthArr.indexOf(month);
+    }
+
+    // Adicione a ordenação personalizada para meses em português
+    $.fn.dataTable.ext.order['month-order-pt'] = function (data) {
+        return getIndexForPortugueseMonth(data);
     };
 
+    // Inicialize o DataTable com a ordenação personalizada apenas para a tabela 'data-table-export'
     $('.data-table-export').DataTable({
         scrollX: true,
-        scrollY: '300px',
+        scrollY: '500px',
         scrollCollapse: true,
         autoWidth: false,
         responsive: false,
-        columnDefs: [
+        "columnDefs": [
             {
-                targets: "datatable-nosort",
-                orderable: false,
+                "targets": 0, // Índice da coluna que contém os meses
+                "type": 'month-order-pt' // Aplica a ordenação personalizada
+            },
+            {
+                "targets": "datatable-nosort",
+                "orderable": false,
             }
         ],
-        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         "language": {
-            "info": "_START_-_END_ of _TOTAL_ entries",
-            searchPlaceholder: "Search",
-            paginate: {
-                next: '<i class="ion-chevron-right"></i>',
-                previous: '<i class="ion-chevron-left"></i',
+            "info": "_START_-_END_ de _TOTAL_ entradas",
+            "searchPlaceholder": "Pesquisar",
+            "paginate": {
+                "next": '<i class="ion-chevron-right"></i>',
+                "previous": '<i class="ion-chevron-left"></i>',
             }
         },
-        dom: 'Bfrtp',
-        buttons: [
-            'copy', 'csv', 'pdf', 'print'
-        ],
+        "dom": 'Bfrtp',
+        "buttons": ['copy', 'csv', 'pdf', 'print'],
         "order": [
-            [0, 'month-order'] // Defina a coluna e a ordem de classificação desejada, 0 para a primeira coluna
+            [0, 'month-order-pt'] // 0 para a primeira coluna, 'asc' para ordenação ascendente
         ]
     });
+
+
+
 
     var table = $('.select-row').DataTable();
 	$('.select-row tbody').on('click', 'tr', function () {

@@ -19,6 +19,7 @@
     <table id="painelTable" class="data-table table stripe hover">
         <thead>
         <tr>
+            <th>Cliente</th>
             <th>Contrato</th>
             <th>Despesas</th>
             <th>Recebimento</th>
@@ -34,6 +35,7 @@
         @foreach ($dadosPainel as $dados)
             <tr>
                 <td>{{ $dados['cliente'] }}</td>
+                <td>{{ $dados['contrato'] }}</td>
                 <td>{{ "R$ " . number_format($dados['despesas'], 2, ',', '.') }}</td>
                 <td>{{ "R$ " . number_format($dados['recebimento'], 2, ',', '.') }}</td>
                 <td>{{ "R$ " . number_format($dados['a_receber_previsao'], 2, ',', '.') }}</td>

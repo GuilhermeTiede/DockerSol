@@ -8,6 +8,7 @@ use App\Models\NotaFiscal;
 use App\Models\StatusNota;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Validator;
 
 class NotasFiscaisController extends Controller
 {
@@ -105,43 +106,52 @@ class NotasFiscaisController extends Controller
 
     public function statusNota(Request $request, $notafiscal)
     {
-        // Buscar a nota fiscal pelo ID
-        $notaFiscal = $this->notaFiscal->find($notafiscal);
+        try {
+            $validator = Validator::make($request->all(), [
+                'status' => 'required',
+                'id_ordemServico' => 'required',
+                'id_fontePagadora' => 'required',
+                'dataPagamento' => 'required|date',
+            ]);
 
-        if (!$notaFiscal) {
-            return redirect()->back()->with('error', 'Nota Fiscal não encontrada!');
-        }
-        // Buscar o statusNota correspondente à nota fiscal
-        $statusNota = StatusNota::where('nota_id', $notaFiscal->id)->first();
-
-
-
-        if ($statusNota) {
-            $statusNota->status = $request->status;
-            $statusNota->save();
-
-            if ($request->status === 'Pago') {
-
-
-                $fluxoCaixa = new FluxoCaixa();
-                $fluxoCaixa->id_ordemServico = $request->id_ordemServico;
-                $fluxoCaixa->id_fontePagadora = $request->id_fontePagadora;
-                $fluxoCaixa->tipo = 'entrada';
-                $fluxoCaixa->valor = $notaFiscal->valorTotal;
-                $fluxoCaixa->observacao = 'Nota Fiscal paga: ' . $notaFiscal->nome_tomador;
-                $fluxoCaixa->data = $request->dataPagamento;
-                $fluxoCaixa->save();
-
+            if ($validator->fails()) {
+                throw new \Exception('Erro de validação. Por favor, verifique os campos e tente novamente.');
             }
 
-            return redirect()->back()->with('message', 'Status da Nota Fiscal atualizado com sucesso!');
-        } else {
-            $novoStatus = new StatusNota();
-            $novoStatus->nota_id = $notaFiscal->id;
-            $novoStatus->status = $request->status;
-            $novoStatus->save();
+            $notaFiscal = $this->notaFiscal->find($notafiscal);
 
-            return redirect()->back()->with('message', 'Status da Nota Fiscal criado com sucesso!');
+            if (!$notaFiscal) {
+                return redirect()->back()->with('error', 'Nota Fiscal não encontrada!');
+            }
+
+            $statusNota = StatusNota::where('nota_id', $notaFiscal->id)->first();
+
+            if ($statusNota) {
+                $statusNota->status = $request->status;
+                $statusNota->save();
+
+                if ($request->status === 'Pago') {
+                    $fluxoCaixa = new FluxoCaixa();
+                    $fluxoCaixa->id_ordemServico = $request->id_ordemServico;
+                    $fluxoCaixa->id_fontePagadora = $request->id_fontePagadora;
+                    $fluxoCaixa->tipo = 'entrada';
+                    $fluxoCaixa->valor = $notaFiscal->valorTotal;
+                    $fluxoCaixa->observacao = 'Nota Fiscal paga: ' . $notaFiscal->nome_tomador;
+                    $fluxoCaixa->data = $request->dataPagamento;
+                    $fluxoCaixa->save();
+                }
+
+                return redirect()->back()->with('message', 'Status da Nota Fiscal atualizado com sucesso!');
+            } else {
+                $novoStatus = new StatusNota();
+                $novoStatus->nota_id = $notaFiscal->id;
+                $novoStatus->status = $request->status;
+                $novoStatus->save();
+
+                return redirect()->back()->with('message', 'Status da Nota Fiscal criado com sucesso!');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
     }
 

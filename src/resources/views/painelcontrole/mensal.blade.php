@@ -6,8 +6,6 @@
 
 @section('content')
 
-
-
         <table class="table hover data-table-export nowrap">
             <thead>
             <tr>

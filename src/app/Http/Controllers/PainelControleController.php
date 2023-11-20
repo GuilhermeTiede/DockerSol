@@ -177,6 +177,10 @@ class PainelControleController extends Controller
                 // Converta o valor para um tipo numérico
                 $valorNumerico = (float) $valorFormatado;
 
+                if ($valorNumerico <= 0) {
+                    return redirect()->back()->with('error', 'O valor de "A Receber Previsão" não pode ser menor ou igual a 0.');
+                }
+
                 $painelControle->a_receber_previsao = $valorNumerico;
 
                 $painelControle->save();

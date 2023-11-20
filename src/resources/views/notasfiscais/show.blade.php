@@ -5,9 +5,13 @@
 @section('link', route('notasfiscais.index'))
 
 @section('content')
-    @if(session('message'))
+    @if(session()->has('message'))
         <div class="alert alert-success">
-            {{ session('message') }}
+            {{ session()->get('message') }}
+        </div>
+    @elseif (session()->has('error'))
+        <div class="alert alert-danger">
+            {{ session()->get('error') }}
         </div>
     @endif
 

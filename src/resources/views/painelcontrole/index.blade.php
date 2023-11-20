@@ -4,7 +4,18 @@
 @section('button', 'Painel de Controle Mensal')
 @section('link', route('painelcontrole.mensal'))
 @section('content')
+    @if(session()->has('message'))
+        <div class="alert alert-success">
+            {{ session()->get('message') }}
+        </div>
+    @elseif (session()->has('error'))
+        <div class="alert alert-danger">
+            {{ session()->get('error') }}
+        </div>
+    @endif
+
     <div class="container">
+{{--class="data-table table stripe hover--}} {{-- ou -> table hover data-table-export nowrap --}}
     <table id="painelTable" class="data-table table stripe hover">
         <thead>
         <tr>

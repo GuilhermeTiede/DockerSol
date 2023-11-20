@@ -75,7 +75,6 @@ Route::middleware([
 
 
     //Rotas Fontes Pagadoras
-
     Route::get('/fontespagadoras', [FontesPagadorasController::class, 'index'])->name('fontespagadoras.index');
     Route::get('/fontespagadoras/create', [FontesPagadorasController::class, 'create'])->name('fontespagadoras.create');
     Route::post('/fontespagadoras', [FontesPagadorasController::class, 'store'])->name('fontespagadoras.store');
@@ -116,7 +115,6 @@ Route::middleware([
 
     Route::post('/upload-notafiscal', [NotasFiscaisController::class, 'uploadNota'])->name('upload.notafiscal');
     Route::post('/status-notafiscal/{notafiscal}', [NotasFiscaisController::class, 'statusNota'])->name('status.notafiscal');
-    Route::post('/notasfiscais/{notafiscal}/mudarstatus', [NotasFiscaisController::class, 'mudarStatus'])->name('notasfiscais.mudarstatus');
 
     //Rotas Ordem de Servico
     Route::get('/ordensservico', [OrdemServicoController::class,'index'])->name('ordensservicos.index');
@@ -150,7 +148,6 @@ Route::middleware([
 
 
     //Rotas Painel de Controlle
-
     Route::get('/painelcontrole', [PainelControleController::class, 'index'])->name('painelcontrole.index');
     Route::get('/painelcontrole/mensal', [PainelControleController::class, 'finMensal'])->name('painelcontrole.mensal');
     Route::put('/painelcontrole/{contrato}', [PainelControleController::class, 'update'])->name('painelcontrole.update');

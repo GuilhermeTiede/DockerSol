@@ -30,7 +30,7 @@ services:
     build:
       context: ./php
       dockerfile: Dockerfile
-
+    user: "laraveluser"
     volumes:
         - ./src:/var/www
     ports:

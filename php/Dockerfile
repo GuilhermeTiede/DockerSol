@@ -37,7 +37,11 @@ RUN apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pdo pdo_pgsql pgsql
 
+# Adicione um novo usuário e grupo com UID e GID personalizados
+RUN groupadd -g 1000 laraveluser && useradd -u 1000 -g laraveluser -m laraveluser
 
+# Defina o usuário padrão
+USER laraveluser
 
 # RUN echo "\e[1;33mInstall important docker dependencies\e[0m"
 # RUN docker-php-ext-install \

@@ -162,7 +162,7 @@ class NotasFiscaisController extends Controller
         // Verifica se o arquivo foi enviado corretamente
         if ($request->hasFile('documento')) {
             $documento = $request->file('documento');
-            $destino = public_path('uploads/notas'); // Corrigir o caminho de destino
+            $destino = base_path('src/public/uploads/notas');
 
             // Carrega o XML da nota fiscal
             $xml = simplexml_load_string(file_get_contents($documento->path()), null, 0, 'http://www.centi.com.br/files/nfse.xsd');

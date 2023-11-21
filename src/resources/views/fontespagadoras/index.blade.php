@@ -5,6 +5,15 @@
 @section('link', route('fontespagadoras.create'))
 
 @section('content')
+    @if(session()->has('message'))
+        <div class="alert alert-success">
+            {{ session()->get('message') }}
+        </div>
+    @elseif (session()->has('error'))
+        <div class="alert alert-danger">
+            {{ session()->get('error') }}
+        </div>
+    @endif
     <table id="fontespagadoras" class="data-table table stripe hover nowrap">
         <thead>
         <tr>

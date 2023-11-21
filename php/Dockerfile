@@ -37,11 +37,16 @@ RUN apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pdo pdo_pgsql pgsql
 
-# Adicione um novo usuário e grupo com UID e GID personalizados
-RUN groupadd -g 1000 laraveluser && useradd -u 1000 -g laraveluser -m laraveluser
+# Adicione essas linhas para definir o usuário e o grupo
+ARG USER_ID
+ARG GROUP_ID
 
-# Defina o usuário padrão
-USER laraveluser
+# Crie o usuário e o grupo
+RUN addgroup --gid $GROUP_ID laravelgroup \
+    && adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID laraveluser
+
+# Mude o usuário e o grupo padrão para laraveluser e laravelgroup
+USER laraveluser:laravelgroup
 
 # RUN echo "\e[1;33mInstall important docker dependencies\e[0m"
 # RUN docker-php-ext-install \

@@ -91,11 +91,11 @@
                 <div class="col-sm-12 col-md-10">
                     <select class="form-control" name="tipoCombustivel">
                         <option value="" disabled selected>Selecione a Categoria</option>
-                        <option value="A">Gasolina</option>
-                        <option value="B">Etanol</option>
-                        <option value="AB">Diesel</option>
-                        <option value="C">GNV</option>
-                        <option value="D">Flex</option>
+                        <option value="Gasolina">Gasolina</option>
+                        <option value="Etanol">Etanol</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="GNV">GNV</option>
+                        <option value="Flex">Flex</option>
                     </select>
                 </div>
             </div>

@@ -22,17 +22,6 @@
                 <p class="mb-30">Edite os campos de Veiculo:</p>
             </div>
         </div>
-
-        @if(session()->has('message'))
-            <div class="alert alert-success">
-                {{ session()->get('message') }}
-            </div>
-        @elseif (session()->has('error'))
-            <div class="alert alert-danger">
-                {{ session()->get('error') }}
-            </div>
-        @endif
-
         <form id="createVeiculos" action="{{route('veiculos.update',['veiculo'=>$veiculo->id])}}" method="post">
             @csrf
 
@@ -105,11 +94,11 @@
                 <div class="col-sm-12 col-md-10">
                     <select class="form-control" name="tipoCombustivel">
                         <option value="{{$veiculo->tipoCombustivel}}">{{$veiculo->tipoCombustivel}}</option>
-                        <option value="A">Gasolina</option>
-                        <option value="B">Etanol</option>
-                        <option value="AB">Diesel</option>
-                        <option value="C">GNV</option>
-                        <option value="D">Flex</option>
+                        <option value="Gasolina">Gasolina</option>
+                        <option value="Etanol">Etanol</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="GNV">GNV</option>
+                        <option value="Flex">Flex</option>
                     </select>
                 </div>
             </div>

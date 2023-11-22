@@ -36,8 +36,8 @@ $('document').ready(function(){
         scrollX: true,
         scrollY: '800px',
         scrollCollapse: true,
-        autoWidth: false,
-        responsive: false,
+        autoWidth: true,
+        responsive: true,
         "columnDefs": [
             {
                 "targets": 0, // Índice da coluna que contém os meses

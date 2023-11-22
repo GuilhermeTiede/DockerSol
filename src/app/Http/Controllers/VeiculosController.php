@@ -107,7 +107,7 @@ class VeiculosController extends Controller
                 'tipoVeiculo' => 'required',
                 'categoriaVeiculo' => 'required',
             ]);
-            $updated = Veiculo::update($request->except('_token', '_method'));
+            $updated = Veiculo::find($id)->update($request->except('_token', '_method'));
             if($updated) {
                 return redirect()->back()->with('message', 'Veiculo atualizado com sucesso!');
             }

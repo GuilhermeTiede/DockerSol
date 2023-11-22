@@ -107,15 +107,26 @@ class FontesPagadorasController extends Controller
     public function destroy(string $id)
     {
         try {
-            $delete = $this->fontePagadora->find($id)->delete();
-            if($delete) {
+            // Encontrar a fonte pagadora pelo ID
+            $fontePagadora = $this->fontePagadora->find($id);
+
+            // Verificar se a fonte pagadora foi encontrada
+            if (!$fontePagadora) {
+                throw new \Exception('Fonte Pagadora não encontrada');
+            }
+
+            // Excluir a fonte pagadora
+            $delete = $fontePagadora->delete();
+
+            // Verificar se a exclusão foi bem-sucedida
+            if ($delete) {
                 return redirect()->back()->with('message', 'Fonte Pagadora excluída com sucesso!');
             } else {
-                return redirect()->back()->with('error', 'Falha ao excluir fonte pagadora!');
+                throw new \Exception('Erro ao excluir a Fonte Pagadora');
             }
+
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
-
     }
 }

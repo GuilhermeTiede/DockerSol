@@ -122,11 +122,11 @@ class MotoristasController extends Controller
      */
     public function destroy(string $id)
     {
-        $deleted = $this->motorista->find($id)->delete();
-        if ($deleted) {
+        try {
+            $this->motorista->find($id)->delete();
             return redirect()->back()->with('message', 'Motorista excluído com sucesso!');
-        } else {
-            return redirect()->back()->with('error', 'Falha ao excluir motorista!');
+        }catch ( \Exception $e){
+            return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
     }
 }

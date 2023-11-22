@@ -5,6 +5,15 @@
 @section('link', route('empresas.index'))
 
 @section('content')
+    @if(session()->has('message'))
+        <div class="alert alert-success">
+            {{ session()->get('message') }}
+        </div>
+    @elseif (session()->has('error'))
+        <div class="alert alert-danger">
+            {{ session()->get('error') }}
+        </div>
+    @endif
 
     <div class="pd-20 card-box mb-30">
         <div class="clearfix">

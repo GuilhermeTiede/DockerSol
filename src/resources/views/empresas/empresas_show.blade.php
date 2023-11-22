@@ -5,6 +5,15 @@
 @section('link', route('empresas.index'))
 
 @section('content')
+    @if(session()->has('message'))
+        <div class="alert alert-success">
+            {{ session()->get('message') }}
+        </div>
+    @elseif (session()->has('error'))
+        <div class="alert alert-danger">
+            {{ session()->get('error') }}
+        </div>
+    @endif
     <h3>Empresa: {{$empresa->nome}}</h3>
 
     <form id="deleteEmpresa" action="{{route('empresas.destroy',['empresa'=>$empresa->id])}}" method="post">

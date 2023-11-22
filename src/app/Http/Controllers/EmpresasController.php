@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Empresa;
+use App\Models\NotaFiscal;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -106,13 +107,34 @@ class EmpresasController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+    private function verificarCnpjNotaFiscal($cnpjEmpresa)
+    {
+        $notasFiscais = NotaFiscal::where('cnpj_prestador', $cnpjEmpresa)->get();
+
+        return $notasFiscais->isNotEmpty();
+    }
+
     public function destroy(string $id)
     {
-        $delete = $this->empresa->find($id)->delete();
-        if($delete) {
+        try {
+            $empresa = $this->empresa->find($id);
+            //Se cnpj empresa existir em NotasFiscais cnpj_prestador, jogar erro na tela que nao pode excluir
+            if (!$empresa) {
+                throw new \Exception('Empresa não encontrada');
+            }
+            $cnpjEmpresa = $empresa->cnpj;
+            $existeNotaFiscal = $this->verificarCnpjNotaFiscal($cnpjEmpresa);
+
+            if ($existeNotaFiscal) {
+                throw new \Exception('Não é possível excluir a empresa, pois o CNPJ está vinculado a Notas Fiscais como CNPJ prestador.');
+            }
+            // Excluir a empresa se tudo estiver OK
+            $empresa->delete();
             return redirect()->back()->with('message', 'Empresa excluída com sucesso!');
-        } else {
-            return redirect()->back()->with('error', 'Falha ao excluir empresa!');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
         }
+
     }
 }

@@ -6,6 +6,19 @@
 @section('content')
     <script src="{{asset('back/src/plugins/apexcharts/apexcharts.min.js')}}"></script>
 
+    <div class="pre-loader">
+        <div class="pre-loader-box">
+            <div class="loader-logo">
+                <img src="{{asset('back/vendors/images/logo1.svg')}}" alt="" />
+            </div>
+            <div class="loader-progress" id="progress_div">
+                <div class="bar" id="bar1"></div>
+            </div>
+            <div class="percent" id="percent1">0%</div>
+            <div class="loading-text">Loading...</div>
+        </div>
+    </div>
+
     <div class="pd-ltr-20">
     <div class="row">
         <div class="col-xl-8 mb-30">

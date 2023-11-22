@@ -35,9 +35,8 @@ $('document').ready(function(){
     $('.data-table-export').DataTable({
         scrollX: true,
         scrollY: '800px',
-        scrollCollapse: false,
         autoWidth: false,
-        responsive: true,
+        responsive: false,
         "columnDefs": [
             {
                 "targets": 0, // Índice da coluna que contém os meses

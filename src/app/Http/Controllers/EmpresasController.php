@@ -128,12 +128,11 @@ class EmpresasController extends Controller
             if ($existeNotaFiscal) {
                 throw new \Exception('Não é possível excluir a empresa, pois o CNPJ está vinculado a Notas Fiscais como CNPJ prestador.');
             }
-            // Excluir a empresa se tudo estiver OK
             $empresa->delete();
-            return redirect()->back()->with('message', 'Empresa excluída com sucesso!');
+            return redirect()->route('empresas.index')>with('message', 'Empresa excluída com sucesso!');
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->route('empresas.index')->with('error', $e->getMessage());
         }
 
     }

@@ -22,18 +22,6 @@
                 <p class="mb-30">Edite os campos a empresa:</p>
             </div>
         </div>
-
-        @if(session()->has('message'))
-            <div class="alert alert-success">
-                {{ session()->get('message') }}
-            </div>
-        @elseif (session()->has('error'))
-            <div class="alert alert-danger">
-                {{ session()->get('error') }}
-            </div>
-        @endif
-
-
         <form id="editEmpresa" action="{{route('empresas.store')}}" method="post">
             @csrf
             <div class="form-group row">

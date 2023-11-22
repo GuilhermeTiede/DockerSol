@@ -3,8 +3,16 @@
 @section('actualPage', 'Vizualizar -> Veiculos')
 @section('button', 'Voltar')
 @section('link', route('veiculos.index'))
-
 @section('content')
+    @if(session()->has('message'))
+        <div class="alert alert-success">
+            {{ session()->get('message') }}
+        </div>
+    @elseif (session()->has('error'))
+        <div class="alert alert-danger">
+            {{ session()->get('error') }}
+        </div>
+    @endif
 
     <div class="pd-20 card-box mb-30">
         <div class="clearfix">
@@ -12,7 +20,6 @@
                 <h4 class="text-blue h4">Excluir Veículo</h4>
             </div>
         </div>
-
         <form id="deleteVeiculos" action="{{route('veiculos.destroy',['veiculo'=>$veiculo->id])}}" method="post">
             @csrf
             <input type="hidden" name="_method" value="DELETE">

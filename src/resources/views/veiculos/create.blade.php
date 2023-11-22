@@ -4,6 +4,15 @@
 @section('button', 'Voltar')
 @section('link', route('veiculos.index'))
 @section('content')
+    @if(session()->has('message'))
+        <div class="alert alert-success">
+            {{ session()->get('message') }}
+        </div>
+    @elseif (session()->has('error'))
+        <div class="alert alert-danger">
+            {{ session()->get('error') }}
+        </div>
+    @endif
 
     <div class="pd-20 card-box mb-30">
         <div class="clearfix">
@@ -12,16 +21,6 @@
                 <p class="mb-30">Edite os campos de Veiculo:</p>
             </div>
         </div>
-
-        @if(session()->has('message'))
-            <div class="alert alert-success">
-                {{ session()->get('message') }}
-            </div>
-        @elseif (session()->has('error'))
-            <div class="alert alert-danger">
-                {{ session()->get('error') }}
-            </div>
-        @endif
 
         <form id="createVeiculos" action="{{route('veiculos.store')}}" method="post">
             @csrf

@@ -52,7 +52,7 @@ class VeiculosController extends Controller
                 'categoriaVeiculo' => 'required',
             ]);
 
-            $created = $this->veiculo->create([
+            $created = Veiculo::create([
                 'id_motorista' => $request->id_motorista,
                 'placa' => $request->placa,
                 'renavam' => $request->renavam,
@@ -107,7 +107,7 @@ class VeiculosController extends Controller
                 'tipoVeiculo' => 'required',
                 'categoriaVeiculo' => 'required',
             ]);
-            $updated = $this->veiculo->find($id)->update($request->except('_token', '_method'));
+            $updated = Veiculo::update($request->except('_token', '_method'));
             if($updated) {
                 return redirect()->back()->with('message', 'Veiculo atualizado com sucesso!');
             }
@@ -123,8 +123,9 @@ class VeiculosController extends Controller
      */
     public function destroy(string $id)
     {
-        $delete = $this->veiculo->find($id)->delete();
-        return redirect()->route('veiculos.index');
-
+        $delete = Veiculo::find($id)->delete();
+        if($delete) {
+            return redirect()->route('veiculos.index')->with('message', 'Veiculo excluido com sucesso!');
+        }
     }
 }

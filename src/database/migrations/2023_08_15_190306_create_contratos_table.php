@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignIdFor(Cliente::class)->constrained()->onDelete('cascade');
             $table->string('nomeContrato');
             $table->string('numeroContrato');
-            $table->string('dataInicio');
-            $table->string('dataFim');
+            $table->date('dataInicio');
+            $table->date('dataFim');
             $table->string('valorContrato');
             $table->text('seguroGarantia')->default('Não');
             $table->text('responsabilidadeTecnica')->default('Não');

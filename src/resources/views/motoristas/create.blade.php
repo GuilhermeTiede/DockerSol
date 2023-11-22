@@ -4,6 +4,15 @@
 @section('button', 'Voltar')
 @section('link', route('motoristas.index'))
 @section('content')
+    @if(session()->has('message'))
+        <div class="alert alert-success">
+            {{ session()->get('message') }}
+        </div>
+    @elseif (session()->has('error'))
+        <div class="alert alert-danger">
+            {{ session()->get('error') }}
+        </div>
+    @endif
 
     <div class="pd-20 card-box mb-30">
         <div class="clearfix">
@@ -12,17 +21,6 @@
                 <p class="mb-30">Preencha os campos do Motorista:</p>
             </div>
         </div>
-
-        @if(session()->has('message'))
-            <div class="alert alert-success">
-                {{ session()->get('message') }}
-            </div>
-        @elseif (session()->has('error'))
-            <div class="alert alert-danger">
-                {{ session()->get('error') }}
-            </div>
-        @endif
-
         <form id="createMotorista" action="{{ route('motoristas.store') }}" method="post">
             @csrf
 

@@ -4,7 +4,15 @@
 @section('button', 'Voltar')
 @section('link', route('motoristas.index'))
 @section('content')
-
+    @if(session()->has('message'))
+        <div class="alert alert-success">
+            {{ session()->get('message') }}
+        </div>
+    @elseif (session()->has('error'))
+        <div class="alert alert-danger">
+            {{ session()->get('error') }}
+        </div>
+    @endif
     <div class="pd-20 card-box mb-30">
         <div class="clearfix">
             <div class="pull-left">
@@ -38,21 +46,21 @@
             <div class="form-group row">
                 <label class="col-sm-12 col-md-2 col-form-label">Cpf</label>
                 <div class="col-sm-12 col-md-10">
-                    <input class="form-control" type="text" id="cpf" name="cpf" value="{{$motorista->cpf}}">
+                    <input class="form-control" type="text" id="cpf" name="cpf" value="{{$motorista->cpf}}"maxlength="11">
                 </div>
             </div>
 
             <div class="form-group row">
                 <label class="col-sm-12 col-md-2 col-form-label">Rg</label>
                 <div class="col-sm-12 col-md-10">
-                    <input class="form-control" type="text" id="rg" name="rg"  value="{{$motorista->rg}}">
+                    <input class="form-control" type="text" id="rg" name="rg"  value="{{$motorista->rg}}"maxlength="9">
                 </div>
             </div>
 
             <div class="form-group row">
                 <label class="col-sm-12 col-md-2 col-form-label">Número da CNH</label>
                 <div class="col-sm-12 col-md-10">
-                    <input class="form-control" type="text" id="cnh" name="cnh"  value="{{$motorista->cnh}}">
+                    <input class="form-control" type="text" id="cnh" name="cnh"  value="{{$motorista->cnh}}"maxlength="11">
                 </div>
             </div>
 

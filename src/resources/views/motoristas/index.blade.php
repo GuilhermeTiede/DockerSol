@@ -4,7 +4,15 @@
 @section('button', 'Novo Motorista')
 @section('link', route('motoristas.create'))
 @section('content')
-
+    @if(session()->has('message'))
+        <div class="alert alert-success">
+            {{ session()->get('message') }}
+        </div>
+    @elseif (session()->has('error'))
+        <div class="alert alert-danger">
+            {{ session()->get('error') }}
+        </div>
+    @endif
     <div class="container">
         @if (count($motoristas) > 0)
             <table id="motoristasTable" class="data-table table stripe hover">

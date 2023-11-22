@@ -40,7 +40,7 @@ class MotoristasController extends Controller
        $request->validate([
             'nome' => 'required',
             'cpf' => 'required|digits:11',
-            'cnh' => 'required|digits:11',
+            'cnh' => 'required|max:11',
             'rg' => 'required|max:9',
             'categoriaCnh' => 'required',
             'telefone' => 'required',

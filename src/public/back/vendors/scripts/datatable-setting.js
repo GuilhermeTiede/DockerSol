@@ -34,7 +34,7 @@ $('document').ready(function(){
     // Inicialize o DataTable com a ordenação personalizada apenas para a tabela 'data-table-export'
     $('.data-table-export').DataTable({
         scrollX: true,
-        scrollY: '500px',
+        scrollY: '800px',
         scrollCollapse: true,
         autoWidth: false,
         responsive: false,

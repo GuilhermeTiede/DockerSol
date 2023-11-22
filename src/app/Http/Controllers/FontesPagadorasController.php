@@ -120,7 +120,7 @@ class FontesPagadorasController extends Controller
 
             // Verificar se a exclusão foi bem-sucedida
             if ($delete) {
-                return redirect()->back()->with('message', 'Fonte Pagadora excluída com sucesso!');
+                return redirect()->route('fontespagadoras.index')->with('message', 'Fonte Pagadora excluída com sucesso!');
             } else {
                 throw new \Exception('Erro ao excluir a Fonte Pagadora');
             }

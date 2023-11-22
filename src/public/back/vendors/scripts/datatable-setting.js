@@ -35,7 +35,7 @@ $('document').ready(function(){
     $('.data-table-export').DataTable({
         scrollX: true,
         scrollY: '800px',
-        scrollCollapse: true,
+        scrollCollapse: false,
         autoWidth: false,
         responsive: true,
         "columnDefs": [

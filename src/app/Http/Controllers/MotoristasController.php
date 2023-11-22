@@ -37,30 +37,31 @@ class MotoristasController extends Controller
      */
     public function store(Request $request)
     {
-       $request->validate([
-            'nome' => 'required',
-            'cpf' => 'required|digits:11',
-            'cnh' => 'required|max:11',
-            'rg' => 'required|max:9',
-            'categoriaCnh' => 'required',
-            'telefone' => 'required',
-            'endereco' => 'required',
-        ]);
+        try {
+            $request->validate([
+                'nome' => 'required',
+                'cpf' => 'required|digits:11',
+                'cnh' => 'required|max:11',
+                'rg' => 'required|max:9',
+                'categoriaCnh' => 'required',
+                'telefone' => 'required',
+                'endereco' => 'required',
+            ]);
 
-        $created = $this->motorista->create([
-            'nome' => $request->nome,
-            'cpf' => $request->cpf,
-            'cnh' => $request->cnh,
-            'rg' => $request->rg,
-            'categoriaCnh' => $request->categoriaCnh,
-            'telefone' => $request->telefone,
-            'endereco' => $request->endereco,
-        ]);
-
-        if ($created) {
-            return redirect()->back()->with('message', 'Motorista cadastrado com sucesso!');
-        } else {
-            return redirect()->back()->with('error', 'Falha ao cadastrar motorista!');
+            $created = Motorista::create([
+                'nome' => $request->nome,
+                'cpf' => $request->cpf,
+                'cnh' => $request->cnh,
+                'rg' => $request->rg,
+                'categoriaCnh' => $request->categoriaCnh,
+                'telefone' => $request->telefone,
+                'endereco' => $request->endereco,
+            ]);
+            if ($created) {
+                return redirect()->back()->with('message', 'Motorista cadastrado com sucesso!');
+            }
+        }catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
     }
 

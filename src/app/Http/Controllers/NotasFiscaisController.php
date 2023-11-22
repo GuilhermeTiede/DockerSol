@@ -159,23 +159,20 @@ class NotasFiscaisController extends Controller
 
     public function uploadNota(Request $request)
     {
-        // Verifica se o arquivo foi enviado corretamente
         if ($request->hasFile('documento')) {
             $documento = $request->file('documento');
-            $destino = '/var/www/public/uploads/notas';
+            $destino = ("uploads/notas");
 
             // Carrega o XML da nota fiscal
             $xml = simplexml_load_string(file_get_contents($documento->path()), null, 0, 'http://www.centi.com.br/files/nfse.xsd');
             if (!$xml) {
                 return redirect()->back()->with('error', 'Erro ao abrir arquivo XML!');
             }
-
             // Verifica se o arquivo é válido
             if ($documento->isValid()) {
                 $nomeDocumento = $documento->getClientOriginalName();
-
                 // Salva o arquivo no destino
-                if ($documento->move($destino, $nomeDocumento)) {
+                if ($documento->storeAs($destino, $nomeDocumento)) {
                     $notafiscal = new NotaFiscal();
                     $nfse = $xml->ListaNfse->CompNfse->Nfse->InfNfse;
                     $notafiscal->numeroNf = $xml->ListaNfse->CompNfse->Nfse->InfNfse->Numero;
@@ -202,6 +199,7 @@ class NotasFiscaisController extends Controller
                     $notafiscal->nome_tomador = (string) $nfse->DeclaracaoPrestacaoServico->InfDeclaracaoPrestacaoServico->Tomador->RazaoSocial;
 
                     if ($notafiscal->save()) {
+                        $documento->move($destino, $documento->getClientOriginalName());
                         return redirect()->back()->with('message', 'Nota Fiscal cadastrada com sucesso!');
                     } else {
                         return redirect()->back()->with('error', 'Falha ao cadastrar Nota Fiscal!');

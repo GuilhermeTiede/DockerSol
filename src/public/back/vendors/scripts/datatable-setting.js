@@ -36,7 +36,7 @@ $('document').ready(function(){
         scrollX: true,
         scrollY: '800px',
         scrollCollapse: true,
-        autoWidth: true,
+        autoWidth: false,
         responsive: true,
         "columnDefs": [
             {

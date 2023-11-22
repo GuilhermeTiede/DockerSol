@@ -23,15 +23,26 @@
                 <td>{{$notafiscal->nome_prestador}}</td>
                 <td>
                     @php
-                        $hoje = time();
-                        $dataPrevisaoPagamento = strtotime($notafiscal->dataPrevisaoPagamento); // Substitua pelo nome correto do campo no seu modelo
-                        $diasFaltantes = ceil(($dataPrevisaoPagamento - $hoje) / 86400);
-
-						if ($diasFaltantes < 0) {
-                        echo "Pagamento " . (-$diasFaltantes) . " dias atrasado";
-                    } else {
-                        echo  $diasFaltantes;
-                    }
+                        // Recupere o status da nota fiscal
+                        $statusNota = App\Models\StatusNota::where('nota_id', $notafiscal->id)->first();
+                        if ($statusNota) {
+                            // Verifique se o status é "Pago"
+                            if ($statusNota->status === 'Pago') {
+                                echo 'Pago';
+                            } else {
+                                // Caso contrário, exiba os dias atrasados
+                                $hoje = time();
+                                $dataPrevisaoPagamento = strtotime($notafiscal->dataPrevisaoPagamento);
+                                $diasFaltantes = ceil(($dataPrevisaoPagamento - $hoje) / 86400);
+                                if ($diasFaltantes < 0) {
+                                    echo "Pagamento " . (-$diasFaltantes) . " dias atrasado";
+                                } else {
+                                    echo  $diasFaltantes;
+                                }
+                            }
+                        } else {
+                            echo "Sem Status";
+                        }
                     @endphp
                 </td>
                 <td>

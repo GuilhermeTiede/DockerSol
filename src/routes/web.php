@@ -113,7 +113,7 @@ Route::middleware([
     Route::put('/notasfiscais/{notafiscal}', [NotasFiscaisController::class, 'update'])->name('notasfiscais.update');
     Route::delete('/notasfiscais/{notafiscal}', [NotasFiscaisController::class, 'destroy'])->name('notasfiscais.destroy');
 
-    Route::post('/upload-notafiscal', [NotasFiscaisController::class, 'uploadNota'])->name('upload.notafiscal');
+    Route::post('/upload-notafiscal', [NotasFiscaisController::class, 'uploadNota2'])->name('upload.notafiscal');
     Route::post('/status-notafiscal/{notafiscal}', [NotasFiscaisController::class, 'statusNota'])->name('status.notafiscal');
 
     //Rotas Ordem de Servico

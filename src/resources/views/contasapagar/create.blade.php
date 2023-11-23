@@ -65,7 +65,7 @@
                     <select class="form-control" name="id_fontePagadora">
                         <option value="" selected>Selecione a Fonte Pagadora</option>
                         @foreach($fontePagadoras as $fontePagadora)
-                        <option value="{{$fontePagadora->id}}">{{$fontePagadora->conta}}</option>
+                        <option value="{{$fontePagadora->id}}">{{$fontePagadora->nomeTitular}}</option>
                         @endforeach
                     </select>
                 </div>

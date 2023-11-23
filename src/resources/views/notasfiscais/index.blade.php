@@ -20,7 +20,20 @@
         @foreach ($notasfiscais as $notafiscal)
             <tr>
                 <td>{{$notafiscal->numeroNf }}</td>
-                <td>{{$notafiscal->nome_prestador}}</td>
+
+                <td>@php
+                    // Supondo que $notafiscal seja uma instância de NotaFiscal
+                    $cnpjPrestador = $notafiscal->cnpj_prestador;
+
+                    // Consultar o banco de dados para obter o nome do prestador com base no CNPJ
+                    $empresa = \App\Models\Empresa::where('cnpj', $cnpjPrestador)->first();
+
+                    // Verificar se a empresa foi encontrada
+                    $nomePrestador = $empresa ? $empresa->nome : 'Nome não encontrado';
+                    echo $nomePrestador;
+                @endphp
+                </td>
+
                 <td>
                     @php
                         // Recupere o status da nota fiscal

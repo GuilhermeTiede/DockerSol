@@ -8,16 +8,16 @@
     <table id="clientesTable" class="data-table table stripe hover nowrap">
         <thead>
         <tr>
-            <th class="table-plus datatable-nosort">Responsável</th>
-            <th >Empresa</th>
+            <th class="table-plus datatable-nosort">Empresa</th>
+            <th >Responsável</th>
             <th class="datatable-nosort">Ações</th>
         </tr>
         </thead>
         <tbody>
         @foreach ($clientes as $cliente)
             <tr>
-                <td class="table-plus">{{$cliente->empresa->nome}}</td>
                 <td>{{ $cliente->nome }}</td>
+                <td class="table-plus">{{$cliente->empresa->nome}}</td>
                 <td>
                     <a class="btn btn-primary" href="{{ route('clientes.edit', ['cliente' => $cliente->id]) }}">Editar</a> |
                     <a class="btn btn-primary" href="{{ route('clientes.show', ['cliente' => $cliente->id]) }}">Visualizar</a>

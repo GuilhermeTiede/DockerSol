@@ -78,7 +78,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('fluxocaixacadastro', function (User $user){
-            return in_array($user->access_level, ['admin', 'bruno','contato','filipe']);
+            return in_array($user->access_level, ['admin', 'bruno','contato','filipe','compras']);
         });
 
         Gate::define('motoristas', function (User $user){

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\ContaAPagar;
 use App\Models\Contrato;
 use App\Models\FluxoCaixa;
 use App\Models\NotaFiscal;
@@ -22,124 +23,6 @@ class PainelControleController extends Controller
         $this->painel = new PainelControle();
     }
 
-//    public function index()
-//    {
-//        // Recupere todos os clientes
-//        $clientes = Cliente::all();
-//
-//
-//        // Inicialize um array para armazenar os dados do Painel de Controle
-//        $dadosPainel = [];
-//
-//
-//        // Itere sobre cada cliente para calcular os dados
-//        foreach ($clientes as $cliente) {
-//
-//            // Verifique se já existe um registro na tabela para este cliente
-//            $painelControle = PainelControle::firstOrNew(['contrato' => $cliente->nome]);
-//
-//            // Se o valor de "A Receber Previsão" não estiver definido, use o valor padrão
-//            if ($painelControle->a_receber_previsao === null) {
-//                $aReceberPrevisao = 1; // Substitua pelo valor real
-//            } else {
-//                $aReceberPrevisao = $painelControle->a_receber_previsao;
-//            }
-//
-//            // Recupere todos os contratos vinculados a este cliente
-//            $contratos = Contrato::where('cliente_id', $cliente->id)->get();
-//
-//            // Inicialize as variáveis de despesas e recebimento para cada cliente
-//            $despesasCliente = 0;
-//            $recebimentoCliente = 0;
-//
-//            // Itere sobre os contratos deste cliente para calcular despesas e recebimento
-//            foreach ($contratos as $contrato) {
-//                // Recupere as ordens de serviço vinculadas a este contrato
-//                $ordensServico = OrdemServico::where('contrato_id', $contrato->id)->get();
-//
-//                // Recupere os IDs das ordens de serviço
-//                $idsOrdemServico = $ordensServico->pluck('id')->toArray();
-//
-//                // Calcule as despesas para este contrato
-//                $despesas = FluxoCaixa::whereIn('id_ordemServico', $idsOrdemServico)
-//                    ->where('tipo', 'saida')
-//                    ->sum('valor');
-//
-//                // Calcule o recebimento para este contrato
-//                $recebimento = FluxoCaixa::whereIn('id_ordemServico', $idsOrdemServico)
-//                    ->where('tipo', 'entrada')
-//                    ->sum('valor');
-//
-//                // Some as despesas e o recebimento para este cliente
-//                $despesasCliente += $despesas;
-//                $recebimentoCliente += $recebimento;
-//            }
-//
-//
-//            // Recupere todas as notas vinculadas a este cliente
-//            $notas = NotaFiscal::where('cnpj_tomador', $cliente->cnpj)->orWhere('nome_tomador', $cliente->nome)->get();
-//
-//            // Recupere os IDs das notas vinculadas a este cliente
-//            $idsNotas = $notas->pluck('id')->toArray();
-//
-//            // Verifique o status das notas na tabela status_notas
-//            $statusNotasPendentes = StatusNota::whereIn('nota_id', $idsNotas)
-//                ->where('status', 'Pendente')
-//                ->get();
-//
-//            // Inicialize a variável para armazenar o valor total das notas pendentes
-//            $valorNFEmitida = 0;
-//
-//            // Itere sobre a coleção de objetos StatusNota pendentes
-//            foreach ($statusNotasPendentes as $statusNota) {
-//                // Recupere o ID da nota associada a este objeto
-//                $notaId = $statusNota->nota_id;
-//
-//                // Consulte a tabela notasfiscais para obter o valor total da nota
-//                $notaFiscal = NotaFiscal::find($notaId);
-//
-//                if ($notaFiscal) {
-//                    // Adicione o valor total da nota à variável
-//                    $valorNFEmitida += $notaFiscal->valorTotal;
-//                    //dd($notaFiscal->valorTotal);
-//                }
-//            }
-//
-//            // Calcule o lucro, faturamento total e margem de lucro para este cliente
-//            $lucro = $recebimentoCliente + $aReceberPrevisao + $valorNFEmitida - $despesasCliente;
-//            $faturamentoTotal = $recebimentoCliente + $valorNFEmitida + $aReceberPrevisao;
-//            $margemLucro = ($lucro / $faturamentoTotal) * 100;
-//
-//            // Adicione os dados do cliente e contratos ao array
-//            $dadosPainel[] = [
-//                'id'=> $cliente->id,
-//                'cliente' => $cliente->nome,
-//                'despesas' => $despesasCliente,
-//                'recebimento' => $recebimentoCliente,
-//                'a_receber_previsao' => $aReceberPrevisao,
-//                'valor_nf_emitida' => $valorNFEmitida,
-//                'lucro' => $lucro,
-//                'faturamento_total' => $faturamentoTotal,
-//                'margem_lucro' => $margemLucro,
-//            ];
-//
-//
-//            $painelControle->despesas = $despesasCliente;
-//            $painelControle->recebimento = $recebimentoCliente;
-//            $painelControle->a_receber_previsao = $aReceberPrevisao;
-//            $painelControle->valor_nf_emitida = $valorNFEmitida;
-//            $painelControle->lucro = $lucro;
-//            $painelControle->faturamento_total = $faturamentoTotal;
-//            $painelControle->margem_lucro = $margemLucro;
-//
-//            $painelControle->save();
-//
-//        }
-//
-//        return view('painelcontrole.index', [
-//            'dadosPainel' => $dadosPainel
-//        ]);
-//    }
 
     public function index()
     {
@@ -180,9 +63,25 @@ class PainelControleController extends Controller
                 $idsOrdemServico = $ordensServico->pluck('id')->toArray();
 
                 // Calcule as despesas para este contrato
-                $despesas = FluxoCaixa::whereIn('id_ordemServico', $idsOrdemServico)
+                $despesasFluxoCaixa = FluxoCaixa::whereIn('id_ordemServico', $idsOrdemServico)
                     ->where('tipo', 'saida')
                     ->sum('valor');
+
+                // Adicione as contas a pagar que ainda não foram pagas
+                $contasNaoPagas = ContaAPagar::whereIn('id_ordemServico', $idsOrdemServico)
+                    ->where('status', 'pendente')
+                    ->sum('valor');
+
+
+
+                $contasMovidasParaFluxo = FluxoCaixa::whereIn('id_ordemServico', $idsOrdemServico)
+                    ->where('tipo', 'saida')
+                    ->whereIn('id', ContaAPagar::whereIn('id_ordemServico', $idsOrdemServico)
+                        ->where('status', 'pago')
+                        ->pluck('id')
+                    )
+                    ->sum('valor');
+
 
                 // Calcule o recebimento para este contrato
                 $recebimento = FluxoCaixa::whereIn('id_ordemServico', $idsOrdemServico)
@@ -190,7 +89,7 @@ class PainelControleController extends Controller
                     ->sum('valor');
 
                 // Some as despesas e o recebimento para este cliente
-                $despesasCliente += $despesas;
+                $despesasCliente += $despesasFluxoCaixa + $contasNaoPagas - $contasMovidasParaFluxo;
                 $recebimentoCliente += $recebimento;
 
                 // Recupere todas as notas vinculadas a este cliente
@@ -307,129 +206,6 @@ class PainelControleController extends Controller
 
     }
 
-
-
-
-//    public function indexMensal()
-//    {
-//
-//        $anoVigencia = now()->year;
-//
-//        $tiposContratos = [
-//            'Retirada Administração',
-//            'Retirada Sócios',
-//            'Retirada Investimento',
-//            'Retirada Impostos',
-//        ];
-//
-//        $dadosPainelMensal = [];
-//
-//        // Itera sobre os tipos de contratos
-//        foreach ($tiposContratos as $tipoContrato) {
-//
-//
-//            $nomeContrato = $tipoContrato . ' ' . $anoVigencia;
-//
-//            $tipoContratoFluxo = 'saida';
-//            $contratos = FluxoCaixa::where('tipo', $tipoContratoFluxo)
-//                ->whereYear('data', $anoVigencia)
-//                ->get();
-//
-//            // Calcula o valor total para este tipo de contrato
-//            $valorTotalContrato = $contratos->sum('valor'); // Substitua pelo campo correto
-//
-//            // Inicializa as variáveis de valores
-//            $admin = 0;
-//            $percentAdmin = 0;
-//            $retirada = 0;
-//            $percentRetirada = 0;
-//            $investimento = 0;
-//            $percentInvestimento = 0;
-//            $valorImpostos = 0;
-//            $percentImpostosPagos = 0;
-//            $valorPis = 0;
-//            $valorCofins = 0;
-//            $valorInss = 0;
-//            $valorIr = 0;
-//            $valorCsll = 0;
-//
-//            foreach ($contratos as $contrato) {
-//
-//                $dataContrato = date_create($contrato->data);
-//
-//                // Obtém o mês da data do contrato formatado em português
-//                $mes = $dataContrato->format('F');
-//
-//
-//                // Lógica para cálculo das retiradas de Administração, Sócios e Investimento
-//                if ($tipoContrato === 'Retirada Administração') {
-//                    $admin += $contrato->valor;
-//                } elseif ($tipoContrato === 'Retirada Sócios') {
-//                    $retirada += $contrato->valor;
-//                } elseif ($tipoContrato === 'Retirada Investimento') {
-//                    $investimento += $contrato->valor;
-//                }
-//                // Lógica para cálculo dos Impostos Pagos
-//                if ($tipoContrato === 'Retirada Impostos') {
-//                    // Substitua pelas lógicas reais para calcular impostos
-//                    $valorPis = 0;
-//                    $valorCofins = 0;
-//                    $valorInss = 0;
-//                    $valorIr = 0;
-//                    $valorCsll = 0;
-//
-//                    $valorImpostos = $valorPis + $valorCofins + $valorInss + $valorIr + $valorCsll;
-//                    $percentImpostosPagos = ($valorImpostos / $valorTotalContrato) * 100;
-//                }
-//            }
-//
-//            $valorTotalContrato = $admin + $retirada + $investimento;
-//            $valorImpostos = $valorPis + $valorCofins + $valorInss + $valorIr + $valorCsll;
-//
-//            if ($valorTotalContrato > 0) {
-//                $percentAdmin = ($admin / $valorTotalContrato) * 100;
-//                $percentRetirada = ($retirada / $valorTotalContrato) * 100;
-//                $percentInvestimento = ($investimento / $valorTotalContrato) * 100;
-//                $percentImpostosPagos = ($valorImpostos / $valorTotalContrato) * 100;
-//            } else {
-//                $percentAdmin = 0;
-//                $percentRetirada = 0;
-//                $percentInvestimento = 0;
-//                $percentImpostosPagos = 0;
-//            }
-//
-//            // Calcula o valor das despesas para este mês
-//            $despesas = FluxoCaixa::whereYear('data', $anoVigencia)
-//                ->whereMonth('data', $mes)
-//                ->where('tipo', 'saida')
-//                ->sum('valor');
-//
-//            // Calcula o valor do resultado do mês
-//            $resultadoMes = $valorTotalContrato - $despesas - $valorImpostos;
-//
-//            // Adicione os dados do tipo de contrato ao array
-//            $dadosPainelMensal[] = [
-//                'mes' => $mes,
-//                'tipo_contrato' => $tipoContrato,
-//                'valor_total_contrato' => $valorTotalContrato,
-//                'admin' => $admin,
-//                'percent_admin' => $percentAdmin,
-//                'retirada' => $retirada,
-//                'percent_retirada' => $percentRetirada,
-//                'investimento' => $investimento,
-//                'percent_investimento' => $percentInvestimento,
-//                'impostos_pagos' => $valorImpostos,
-//                'percent_impostos_pagos' => $percentImpostosPagos,
-//                'impostos_retidos' => $valorPis + $valorCofins + $valorInss + $valorIr + $valorCsll,
-//                'percent_impostos_retidos' => (($valorTotalContrato - $admin - $retirada - $investimento) / 1) * 100,
-//                'resultado_mes' => $resultadoMes,
-//            ];
-//        }
-//
-//        return view('painelcontrole.mensal', [
-//            'dadosPainelMensal' => $dadosPainelMensal,
-//        ]);
-//    }
 
     private function processarRetirada($nomeContrato, $mesNumero, $anoAtual) {
         // Inicializa o valor da retirada

@@ -339,6 +339,8 @@
                         <li><a href="{{route('contasapagar.index')}}">Contas a Pagar</a></li>
                         <li><a href="{{route('notasfiscais.index')}}">Faturamento</a></li>
                         <li><a href="{{route('painelcontrole.index')}}">Painel de Controle</a></li>
+                        <li><a href="{{route('painelcontrole.mensal')}}">Gerência</a></li>
+                        <li><a href="{{route('painelcontrole.graficos')}}">Gráficos - Provisório</a></li>
                     </ul>
                 </li>
             </ul>

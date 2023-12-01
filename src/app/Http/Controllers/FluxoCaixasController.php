@@ -8,6 +8,7 @@ use App\Models\FontePagadora;
 use App\Models\OrdemServico;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class FluxoCaixasController extends Controller
 {
@@ -48,7 +49,10 @@ class FluxoCaixasController extends Controller
 
         $fluxoCaixas = $fluxoCaixas->get();
 
-        return view('fluxocaixas.index', compact('fluxoCaixas', 'contratos', 'ordemServicos'));
+
+
+            return view('fluxocaixas.index', compact('fluxoCaixas', 'contratos', 'ordemServicos'));
+
     }
 
     public function create()

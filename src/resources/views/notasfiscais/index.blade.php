@@ -10,6 +10,7 @@
         <tr>
             <th>Nf</th>
             <th>Pertencente</th>
+            <th>Cliente</th>
             <th>Dias Faltantes</th>
             <th>Valor da Nota</th>
             <th>Status</th>
@@ -33,6 +34,7 @@
                     echo $nomePrestador;
                 @endphp
                 </td>
+                <td>{{ $notafiscal->clienteCnpj ? $notafiscal->clienteCnpj->nome : 'Cliente não encontrado' }}</td>
 
                 <td>
                     @php

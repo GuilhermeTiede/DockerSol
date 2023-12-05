@@ -28,4 +28,11 @@ class NotaFiscal extends Model
         'nome_tomador',
     ];
     protected $table = 'notasfiscais';
+
+    public function clienteCnpj()
+    {
+        return $this->belongsTo(Cliente::class,'cnpj_tomador', 'cnpj');
+    }
 }
+
+

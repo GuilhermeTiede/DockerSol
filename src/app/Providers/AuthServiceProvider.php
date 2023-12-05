@@ -74,7 +74,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('fluxocaixa', function (User $user){
-            return in_array($user->access_level, ['admin', 'filipe']);
+            return in_array($user->access_level, ['admin', 'filipe','compras']);
         });
 
         Gate::define('fluxocaixacadastro', function (User $user){
@@ -87,6 +87,10 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('ordemservico', function (User $user){
             return in_array($user->access_level, ['admin', 'filipe']);
+        });
+
+        Gate::define('homepage', function (User $user){
+            return in_array($user->access_level, ['admin', 'filipe', 'bruno','isma','contato', 'compras']);
         });
 
 

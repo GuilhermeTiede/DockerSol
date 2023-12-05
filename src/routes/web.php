@@ -156,7 +156,7 @@ Route::middleware([
         $controller = new NotasFiscaisController();
         $data = $controller->gerarGraficoFaturamentoPorMes();
         return view('example-app', ['data' => $data]);
-    })->middleware('can:clientes');
+    })->middleware('can:homepage');
 
 });
 

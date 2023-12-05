@@ -31,7 +31,6 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
-//    'access.control',
 ])->group(function () {
 
         //Rotas de Clientes

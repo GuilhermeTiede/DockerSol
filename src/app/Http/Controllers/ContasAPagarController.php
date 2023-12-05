@@ -78,7 +78,17 @@ class ContasAPagarController extends Controller
 
     public function show(ContaAPagar $conta)
     {
-        return view('contasapagar.show', ['conta' => $conta]);
+        $ordemServicos = OrdemServico::all();
+        $fontePagadoras = FontePagadora::all();
+        return view('contasapagar.show', [
+            'fontePagadoras' => $fontePagadoras,
+            'ordemServicos' => $ordemServicos,
+            'conta' => $conta
+
+
+
+
+        ]);
     }
 
     public function edit(ContaAPagar $conta)
@@ -187,6 +197,8 @@ class ContasAPagarController extends Controller
 
         return redirect()->back()->with('message', 'Status da conta atualizado com sucesso!');
     }
+
+
 
 
 }

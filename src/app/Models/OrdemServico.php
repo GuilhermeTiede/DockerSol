@@ -28,5 +28,9 @@ class OrdemServico extends Model
         return $this->hasMany(FluxoCaixa::class, 'id_ordemServico');
     }
 
+    public function documentoscontrato()
+    {
+        return $this->hasMany(DocumentosContrato::class, 'contrato_id');
+    }
 
 }

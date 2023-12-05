@@ -37,6 +37,10 @@ class ContaAPagar extends Model
         return $this->belongsTo(Contrato::class);
     }
 
+    public function documentoscontrato()
+    {
+        return $this->hasMany(DocumentosContrato::class, 'contrato_id');
+    }
 
 
 

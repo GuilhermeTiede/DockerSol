@@ -62,7 +62,8 @@ class OrdemServicoController extends Controller
 
     public function show(OrdemServico $ordemServico)
     {
-        return view('ordensservicos.show', compact('ordemServico'));
+        $contratos = Contrato::all();
+        return view('ordensservicos.show', compact('ordemServico'), ['contratos' => $contratos]);
     }
 
     public function edit(OrdemServico $ordemServico)

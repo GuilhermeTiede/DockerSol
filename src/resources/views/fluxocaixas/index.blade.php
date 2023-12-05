@@ -45,6 +45,7 @@
                 <table id="fluxoCaixasTable" class="data-table table stripe hover">
                     <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Contrato</th>
                         <th>Os</th>
                         <th>Data</th>
@@ -58,10 +59,11 @@
                     <tbody>
                     @foreach ($fluxoCaixas as $fluxoCaixa)
                         <tr>
+                            <td>{{ $fluxoCaixa->id }}</td>
                            <td>{{ $fluxoCaixa->ordemServico->contrato->nomeContrato }}</td>
                             <td>{{ $fluxoCaixa->ordemServico->numeroOrdemServico}}</td>
                             <td>{{ $fluxoCaixa->data }}</td>
-                            <td>{{ $fluxoCaixa->fontePagadora->conta }}</td>
+                            <td>{{ $fluxoCaixa->fontePagadora->nomeTitular }}</td>
                             <td>
                                 @php
                                 $valorFormatado = number_format($fluxoCaixa->valor,2,',','.');

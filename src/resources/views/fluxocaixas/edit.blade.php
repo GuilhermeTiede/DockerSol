@@ -46,9 +46,9 @@
                 <label class="col-sm-12 col-md-2 col-form-label">Fonte Pagadora</label>
                 <div class="col-sm-12 col-md-10">
                     <select class="form-control" name="id_fontePagadora">
-                        <option value="{{$fluxoCaixa->fontePagadora->id}}">{{$fluxoCaixa->fontePagadora->conta}}</option>
+                        <option value="{{$fluxoCaixa->fontePagadora->id}}">{{$fluxoCaixa->fontePagadora->nomeTitular}}</option>
                         @foreach($fontePagadoras as $fontePagadora)
-                            <option value="{{$fontePagadora->id}}">{{$fontePagadora->conta}}</option>
+                            <option value="{{$fontePagadora->id}}">{{$fontePagadora->nomeTitular}}</option>
                         @endforeach
                     </select>
                 </div>

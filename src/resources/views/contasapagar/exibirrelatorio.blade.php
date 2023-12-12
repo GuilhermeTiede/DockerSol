@@ -27,19 +27,21 @@
     <table class="table hover data-table-export nowrap">
         <thead>
         <tr>
+            <th>Data Início</th>
+            <th>Data Fim</th>
             <th>Total Pendente</th>
             <th>Total Atrasado</th>
         </tr>
         </thead>
         <tbody>
-        @if(isset($pendentes))
-            @foreach($pendentes as $conta)
+
                 <tr>
+                    <td>{{ isset($data_inicial) ? \Carbon\Carbon::createFromFormat('Y-m-d', $data_inicial)->format('d/m/Y') : '' }}</td>
+                    <td>{{ isset($data_final) ? \Carbon\Carbon::createFromFormat('Y-m-d', $data_final)->format('d/m/Y') : '' }}</td>
                     <td>{{ isset($totalPendentes) ? 'R$ ' . number_format($totalPendentes, 2, ',', '.') : '' }}</td>
                     <td>{{ isset($totalAtrasados) ? 'R$ ' . number_format($totalAtrasados, 2, ',', '.') : '' }}</td>
                 </tr>
-            @endforeach
-        @endif
+
         </tbody>
     </table>
 

@@ -40,6 +40,10 @@
                     </div>
                 </div>
             </form>
+            <form action="{{ route('fluxocaixas.exibirrelatorio') }}" method="GET">
+                <button type="submit" class="btn btn-primary">Acessar Relatórios</button>
+            </form>
+
 
             @if (count($fluxoCaixas) > 0)
                 <table id="fluxoCaixasTable" class="data-table table stripe hover">

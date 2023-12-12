@@ -6,6 +6,8 @@ use App\Models\Contrato;
 use App\Models\FluxoCaixa;
 use App\Models\FontePagadora;
 use App\Models\OrdemServico;
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -193,5 +195,54 @@ class FluxoCaixasController extends Controller
 
         // Retorne as Ordens de Serviço como resposta em formato JSON
         return response()->json($ordemServicos);
+    }
+
+    public function exibirRelatorio(FluxoCaixa $fluxoCaixa)
+    {
+        return view ('fluxocaixas.exibirrelatorio', [
+            'fluxoCaixa' => $fluxoCaixa,
+        ]
+    );
+    }
+    public function relatorios(FluxoCaixa $fluxoCaixa, Request $request)
+    {
+        // Definir valores padrão para as datas se não forem fornecidas
+        $dataInicial = $request->input('data_inicial') ?? Carbon::yesterday()->format('Y-m-d');
+        $dataFinal = $request->input('data_final') ?? Carbon::today()->format('Y-m-d');
+
+        // Validar e formatar as datas conforme necessário
+        $dataInicial = DateTime::createFromFormat('Y-m-d', $dataInicial);
+        $dataFinal = DateTime::createFromFormat('Y-m-d', $dataFinal);
+
+        if (!$dataInicial || !$dataFinal) {
+            return "Erro na formatação das datas.";
+        }
+
+        // Consulta ao banco de dados usando Eloquent
+        $resultadosEntrada = $fluxoCaixa
+            ->where('tipo', 'entrada')
+            ->whereBetween('data', [$dataInicial, $dataFinal])
+            ->get();
+
+        $resultadosSaida = $fluxoCaixa
+            ->where('tipo', 'saida')
+            ->whereBetween('data', [$dataInicial, $dataFinal])
+            ->get();
+
+        // Calcular totais
+        $totalEntrada = $resultadosEntrada->sum('valor');
+        $totalSaida = $resultadosSaida->sum('valor');
+        $valorTotal = $totalEntrada - $totalSaida;
+
+        // Retornar os resultados ou valores conforme necessário
+        return view('fluxocaixas.exibirrelatorio', [
+            'entrada' => $resultadosEntrada,
+            'saida' => $resultadosSaida,
+            'totalEntrada' => $totalEntrada,
+            'totalSaida' => $totalSaida,
+            'saldo' => $valorTotal,
+            'data_inicial' => $dataInicial->format('Y-m-d'), // formatando para o formato desejado
+            'data_final' => $dataFinal->format('Y-m-d'), // formatando para o formato desejado
+        ]);
     }
 }

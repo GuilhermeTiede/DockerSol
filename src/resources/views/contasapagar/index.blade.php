@@ -14,6 +14,9 @@
             {{ session()->get('error') }}
         </div>
     @endif
+    <form action="{{ route('contasapagar.exibirrelatorio') }}" method="GET">
+        <button type="submit" class="btn btn-primary">Acessar Relatórios</button>
+    </form>
 
     <table id="clientesTable" class="data-table table stripe hover">
         <thead>

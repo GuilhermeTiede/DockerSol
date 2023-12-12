@@ -6,6 +6,8 @@ use App\Models\Contrato;
 use App\Models\FluxoCaixa;
 use App\Models\FontePagadora;
 use App\Models\OrdemServico;
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
 
 class ContasAPagarController extends Controller
@@ -196,6 +198,63 @@ class ContasAPagarController extends Controller
         }
 
         return redirect()->back()->with('message', 'Status da conta atualizado com sucesso!');
+    }
+
+
+    public function exibirRelatorioContasAPagar(ContaAPagar $contasAPagar)
+    {
+        return view('contasapagar.exibirrelatorio', [
+            'contasAPagar' => $contasAPagar,
+        ]);
+    }
+
+    public function relatoriosContasAPagar(ContaAPagar $contasAPagar, Request $request)
+    {
+        $dataInicial = $request->input('data_inicial') ?? Carbon::yesterday()->format('Y-m-d');
+        $dataFinal = $request->input('data_final') ?? Carbon::today()->format('Y-m-d');
+
+        // Validar e formatar as datas conforme necessário
+        $dataInicial = DateTime::createFromFormat('Y-m-d', $dataInicial);
+        $dataFinal = DateTime::createFromFormat('Y-m-d', $dataFinal);
+
+        if (!$dataInicial || !$dataFinal) {
+            return "Erro na formatação das datas.";
+        }
+
+        // Consulta ao banco de dados usando Eloquent
+        $resultadosPendentes = $contasAPagar
+            ->where('status', 'pendente')
+            ->whereBetween('dataVencimento', [$dataInicial, $dataFinal])
+            ->get();
+
+        $resultadosPagos = $contasAPagar
+            ->where('status', 'pago')
+            ->whereBetween('dataPagamento', [$dataInicial, $dataFinal])
+            ->get();
+
+        $resultadosAtrasados = $contasAPagar
+            ->where('status', 'atrasado')
+            ->where('dataVencimento', '<', Carbon::today()->format('Y-m-d'))
+            ->get();
+
+        // Calcular totais
+        $totalPendentes = $resultadosPendentes->sum('valor');
+        $totalPagos = $resultadosPagos->sum('valor');
+        $totalAtrasados = $resultadosAtrasados->sum('valor');
+        $valorTotal = $totalPendentes + $totalPagos + $totalAtrasados;
+
+        // Retornar os resultados ou valores conforme necessário
+        return view('contasapagar.exibirrelatorio', [
+            'pendentes' => $resultadosPendentes,
+            'pagos' => $resultadosPagos,
+            'atrasados' => $resultadosAtrasados,
+            'totalPendentes' => $totalPendentes,
+            'totalPagos' => $totalPagos,
+            'totalAtrasados' => $totalAtrasados,
+            'valorTotal' => $valorTotal,
+            'data_inicial' => $dataInicial->format('Y-m-d'),
+            'data_final' => $dataFinal->format('Y-m-d'),
+        ]);
     }
 
 

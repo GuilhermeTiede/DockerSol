@@ -92,9 +92,12 @@ Route::middleware([
         Route::put('/contasapagar/{conta}', [ContasAPagarController::class, 'update'])->name('contasapagar.update')->middleware('can:contasapagar');
         Route::delete('/contasapagar/{conta}', [ContasAPagarController::class, 'destroy'])->name('contasapagar.destroy')->middleware('can:contasapagar');
         Route::post('/contasapagar/{conta}/mudarstatus', [ContasAPagarController::class, 'mudarStatus'])->name('contasapagar.mudarstatus')->middleware('can:pagarcontas');
+        Route::get('/exibirrelatoriocontasapagar', [ContasAPagarController::class, 'exibirRelatorioContasAPagar'])->name('contasapagar.exibirrelatorio')->middleware('can:admin');
+        Route::get('/relatorioscontasapagar', [ContasAPagarController::class, 'relatoriosContasAPagar'])->name('contasapagar.relatorios')->middleware('can:admin');
 
 
-        //Rotas Notas Fiscais
+
+    //Rotas Notas Fiscais
         Route::get('/notasfiscais', [NotasFiscaisController::class, 'index'])->name('notasfiscais.index')->middleware('can:notasfiscais');
         Route::get('/notasfiscais/create', [NotasFiscaisController::class, 'create'])->name('notasfiscais.create')->middleware('can:notasfiscais');
         Route::post('/notasfiscais', [NotasFiscaisController::class, 'store'])->name('notasfiscais.store')->middleware('can:notasfiscais');
@@ -126,6 +129,9 @@ Route::middleware([
         Route::delete('/fluxocaixa/{fluxoCaixa}', [FluxoCaixasController::class,'destroy'])->name('fluxocaixas.destroy')->middleware('can:admin');
 
         Route::get('/get-ordem-servico-por-contrato', [FluxoCaixasController::class,'getOrdemServicoPorContrato']);
+        Route::get('/exibirrelatorio', [FluxoCaixasController::class,'exibirRelatorio'])->name('fluxocaixas.exibirrelatorio')->middleware('can:admin');
+        Route::get('/relatorios', [FluxoCaixasController::class,'relatorios'])->name('fluxocaixas.relatorios')->middleware('can:admin');
+
 
         //Rotas Motoristas
         Route::get('/motoristas', [MotoristasController::class, 'index'])->name('motoristas.index')->middleware('can:motoristas');

@@ -11,6 +11,7 @@ use App\Models\OrdemServico;
 use App\Models\PainelControle;
 use App\Models\StatusNota;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Models\Financeiro;
 
@@ -288,19 +289,24 @@ class PainelControleController extends Controller
             $percentRetirada = ($faturamento > 0) ? ($retirada / $faturamento) * 100 : 0;
             $percentInvestimento = ($faturamento > 0) ? ($investimento / $faturamento) * 100 : 0;
             $percentImpostos = ($faturamento > 0) ? ($impostos / $faturamento) * 100 : 0;
+            $impostosRetidos = NotaFiscal::whereMonth('dataEmissao', '=', $mesNumero)
+                    ->sum('valorIss')
+                + NotaFiscal::whereMonth('dataEmissao', '=', $mesNumero)
+                    ->sum('valorPis')
+                + NotaFiscal::whereMonth('dataEmissao', '=', $mesNumero)
+                    ->sum('valorCofins')
+                + NotaFiscal::whereMonth('dataEmissao', '=', $mesNumero)
+                    ->sum('valorInss')
+                + NotaFiscal::whereMonth('dataEmissao', '=', $mesNumero)
+                    ->sum('valorIr')
+                + NotaFiscal::whereMonth('dataEmissao', '=', $mesNumero)
+                    ->sum('valorCsll');
 
-            $impostosRetidos =  NotaFiscal::whereMonth('dataEmissao', '=', $mesNumero)
-                ->sum('valorIss',
-                    'valorPis',
-                    'valorCofins',
-                    'valorInss',
-                    'valorIr',
-                    'valorCsll'
-                );
 
             $percentImpostosRetidos = ($faturamento > 0) ? ($impostosRetidos / $faturamento) * 100 : 0;
 
             $percentualTotalImpostos = $percentImpostosRetidos + $percentImpostos;
+
 
             $lucro = $faturamento - $despesas - $impostosRetidos;
 

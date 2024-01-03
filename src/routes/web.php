@@ -145,8 +145,9 @@ Route::middleware([
 
         //Rotas Painel de Controlle
         Route::get('/painelcontrole', [PainelControleController::class, 'index'])->name('painelcontrole.index')->middleware('can:admin');
-        Route::get('/painelcontrole/mensal', [PainelControleController::class, 'finMensal'])->name('painelcontrole.mensal')->middleware('can:admin');;
-        Route::put('/painelcontrole/{contrato}', [PainelControleController::class, 'update'])->name('painelcontrole.update')->middleware('can:admin');;
+        Route::get('/painelcontrole/mensal', [PainelControleController::class, 'finMensal'])->name('painelcontrole.mensal')->middleware('can:admin');
+        Route::get('/painelcontrole/mensal/anterior', [PainelControleController::class, 'finMensalAnterior'])->name('painelcontrole.mensalanterior')->middleware('can:admin');;
+        Route::put('/painelcontrole/{contrato}', [PainelControleController::class, 'update'])->name('painelcontrole.update')->middleware('can:admin');
         Route::get('/painelcontrole/graficos',function () {
             $controller = new NotasFiscaisController();
             $data = $controller->gerarGraficoFaturamentoPorMes();

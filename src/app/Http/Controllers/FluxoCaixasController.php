@@ -51,10 +51,7 @@ class FluxoCaixasController extends Controller
 
         $fluxoCaixas = $fluxoCaixas->get();
 
-
-
             return view('fluxocaixas.index', compact('fluxoCaixas', 'contratos', 'ordemServicos'));
-
     }
 
     public function create()
@@ -206,9 +203,11 @@ class FluxoCaixasController extends Controller
     }
     public function relatorios(FluxoCaixa $fluxoCaixa, Request $request)
     {
-        // Definir valores padrão para as datas se não forem fornecidas
+
         $dataInicial = $request->input('data_inicial') ?? Carbon::yesterday()->format('Y-m-d');
         $dataFinal = $request->input('data_final') ?? Carbon::today()->format('Y-m-d');
+
+
 
         // Validar e formatar as datas conforme necessário
         $dataInicial = DateTime::createFromFormat('Y-m-d', $dataInicial);

@@ -13,69 +13,9 @@
 
     <div class="pd-20 card-box mb-30">
 
-{{--        <form id="statusNota" action="{{ route('status.notafiscal', ['notafiscal' => $notafiscal->id]) }}" method="post">--}}
-{{--            @csrf--}}
-
-{{--            <div class="form-group row">--}}
-{{--                <label class="col-sm-12 col-md-2 col-form-label">Contratos</label>--}}
-{{--                <div class="col-sm-12 col-md-10">--}}
-{{--                    <select class="form-control" name="id_contrato" id="id_contrato">--}}
-{{--                        <option value="" disabled selected>Selecione Contratos</option>--}}
-{{--                        @foreach($contratos as $contrato)--}}
-{{--                            <option value="{{$contrato->id}}">{{$contrato->nomeContrato}}</option>--}}
-{{--                        @endforeach--}}
-{{--                    </select>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-
-{{--            <div class="form-group row">--}}
-{{--                <label class="col-sm-12 col-md-2 col-form-label">Ordem de Servico</label>--}}
-{{--                <div class="col-sm-12 col-md-10">--}}
-{{--                    <select class="form-control" name="id_ordemServico" id="id_ordemServico">--}}
-{{--                        <option value="" disabled selected>Selecione a Os Correspondente</option>--}}
-{{--                    </select>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-
-{{--            <div class="form-group row">--}}
-{{--                <label class="col-sm-12 col-md-2 col-form-label">Fonte Pagadora</label>--}}
-{{--                <div class="col-sm-12 col-md-10">--}}
-{{--                    <select class="form-control" name="id_fontePagadora">--}}
-{{--                        <option value="" disabled selected>Selecione a Fonte Pagadora</option>--}}
-{{--                        @foreach($fontePagadoras as $fontePagadora)--}}
-{{--                            <option value="{{$fontePagadora->id}}">{{$fontePagadora->conta}}</option>--}}
-{{--                        @endforeach--}}
-{{--                    </select>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-
-{{--            <div class="form-group row">--}}
-{{--                <label class="col-sm-12 col-md-2 col-form-label">Data</label>--}}
-{{--                <div class="col-sm-12 col-md-10">--}}
-{{--                    <input class="form-control date-picker" type="text" name="dataPagamento">--}}
-{{--                </div>--}}
-{{--            </div>--}}
-
-{{--            <div class="form-group row">--}}
-{{--                <label class="col-sm-12 col-md-2 col-form-label">Status Nota</label>--}}
-{{--                <div class="col-sm-12 col-md-10">--}}
-{{--                    <select class="form-control" name="status">--}}
-{{--                        <option value="" disabled selected>Selecione o Status</option>--}}
-
-{{--                        <option value="Pago">Pago</option>--}}
-{{--                        <option value="Pendente">Pendente</option>--}}
-
-{{--                    </select>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-
-{{--            <button type="submit" class="btn btn-success">Salvar Status</button>--}}
-{{--        </form>--}}
-
         <form id="deleteNotafiscal" action="{{route('notasfiscais.update',['notafiscal'=>$notafiscal->id])}}" method="post">
             @csrf
             <input type="hidden" name="_method" value="PUT">
-
             <div class="row">
                 <div class="col-md-2 col-sm-2">
                     <div class="form-group">
@@ -127,7 +67,7 @@
                 </div>
 
                 <div class="col-md-2">
-                    <label class="col-form-label">Cofins</label>>
+                    <label class="col-form-label">Cofins</label>
                     <input class="form-control" type="text" name="valorCofins" value="{{$notafiscal->valorCofins}}">
                 </div>
 
@@ -175,7 +115,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <label class="col-form-label">Descrição</label>
-                    <textarea class="form-control" name="descricao" rows="4" disabled>{{$notafiscal->descricao}}</textarea>
+                        <textarea class="form-control" name="descricao" rows="4" disabled> {{$notafiscal->descricao}} </textarea>
                 </div>
             </div>
 

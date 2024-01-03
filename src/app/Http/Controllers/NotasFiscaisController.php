@@ -5,6 +5,7 @@ use App\Models\Contrato;
 use App\Models\FluxoCaixa;
 use App\Models\FontePagadora;
 use App\Models\NotaFiscal;
+use App\Models\OrdemServico;
 use App\Models\StatusNota;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -66,11 +67,13 @@ class NotasFiscaisController extends Controller
     {
         $fontePagadoras = FontePagadora::all();
         $contratos = Contrato::all();
+        $ordemServicos = OrdemServico::all();
 
         return view('notasfiscais.show', [
             'notafiscal' => $notafiscal,
             'fontePagadoras' => $fontePagadoras,
             'contratos' => $contratos,
+            'ordemServicos' => $ordemServicos,
 
         ]);
     }
@@ -84,11 +87,15 @@ class NotasFiscaisController extends Controller
 
     public function update(Request $request, string $id)
     {
+        try{
         $update  = $this->notaFiscal->find($id)->update($request->except('_token', '_method'));
+
         if($update) {
             return redirect()->back()->with('message', 'Nota Fiscal atualizada com sucesso!');
-        } else {
-            return redirect()->back()->with('error', 'Falha ao atualizar Nota Fiscal!');
+        }
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
 
     }

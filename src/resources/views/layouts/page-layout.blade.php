@@ -338,11 +338,21 @@
                     <ul class="submenu">
                         <li><a href="{{route('contasapagar.index')}}">Contas a Pagar</a></li>
                         <li><a href="{{route('notasfiscais.index')}}">Faturamento</a></li>
-                        <li><a href="{{route('painelcontrole.index')}}">Painel de Controle</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="javascript:;" class="dropdown-toggle">
+								<span class="micon bi bi-graph-up-arrow"></span
+                                ><span class="mtext">Gestão </span>
+                    </a>
+                    <ul class="submenu">
                         <li><a href="{{route('painelcontrole.mensal')}}">Gerência</a></li>
+                        <li><a href="{{route('painelcontrole.index')}}">Painel de Controle</a></li>
                         <li><a href="{{route('painelcontrole.graficos')}}">Gráficos - Provisório</a></li>
                     </ul>
                 </li>
+
             </ul>
         </div>
     </div>

@@ -24,8 +24,8 @@
                 <label class="col-sm-12 col-md-2 col-form-label">Contratos</label>
                 <div class="col-sm-12 col-md-10">
                     <select class="form-control" name="id_contrato" id="id_contrato">
-                        <option value="" disabled selected>Selecione Contratos</option>
-                        @foreach($contratos as $contrato)
+                        @foreach($ordemServicos as $ordemServico)
+                        <option value="{{$ordemServico->clienteCnpj}}" selected></option>
                             <option value="{{$contrato->id}}">{{$contrato->nomeContrato}}</option>
                         @endforeach
                     </select>
@@ -45,8 +45,8 @@
                 <label class="col-sm-12 col-md-2 col-form-label">Fonte Pagadora</label>
                 <div class="col-sm-12 col-md-10">
                     <select class="form-control" name="id_fontePagadora">
-                        <option value="" disabled selected>Selecione a Fonte Pagadora</option>
                         @foreach($fontePagadoras as $fontePagadora)
+                        <option value="{{$fontePagadora->id}}" disabled selected>{{$fontePagadora->nomeTitular}}</option>
                             <option value="{{$fontePagadora->id}}">{{$fontePagadora->nomeTitular}}</option>
                         @endforeach
                     </select>
@@ -59,16 +59,15 @@
                     <input class="form-control date-picker" type="text" name="dataPagamento">
                 </div>
             </div>
-
             <div class="form-group row">
                 <label class="col-sm-12 col-md-2 col-form-label">Status Nota</label>
                 <div class="col-sm-12 col-md-10">
                     <select class="form-control" name="status">
-                        <option value="" disabled selected>Selecione o Status</option>
 
-                        <option value="Pago">Pago</option>
-                        <option value="Pendente">Pendente</option>
+                                <option value="{{$notafiscal->statusNotas->id}}" disabled selected>{{$notafiscal->statusNotas->status}}</option>
 
+                            <option value="Pago">Pago</option>
+                            <option value="Pendente">Pendente</option>
                     </select>
                 </div>
             </div>
@@ -131,7 +130,7 @@
             </div>
 
             <div class="col-md-2">
-                <label class="col-form-label">Cofins</label>>
+                <label class="col-form-label">Cofins</label>
                 <input class="form-control" type="text" name="valorCofins" value="{{$notafiscal->valorCofins}}" disabled>
             </div>
 

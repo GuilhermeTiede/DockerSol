@@ -15,7 +15,7 @@ class NotaFiscal extends Model
         'mes',
         'exercicio',
         'valorTotal',
-        'valorISS',
+        'valorIss',
         'valorPis',
         'valorCofins',
         'valorInss',
@@ -33,6 +33,11 @@ class NotaFiscal extends Model
     {
         return $this->belongsTo(Cliente::class,'cnpj_tomador', 'cnpj');
     }
+    public function statusNotas()
+    {
+        return $this->belongsTo(StatusNota::class,'id', 'nota_id');
+    }
+
 }
 
 

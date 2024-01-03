@@ -1,8 +1,8 @@
 @extends('layouts.page-layout')
 @section('pageTitle', 'Painel de Controle Mensal')
 @section('actualPage', 'Painel de Controle Mensal')
-@section('button', 'Voltar')
-@section('link', route('painelcontrole.index'))
+@section('button', 'Ano de 2023')
+@section('link', route('painelcontrole.mensalanterior'))
 
 @section('content')
 
@@ -29,6 +29,7 @@
             </tr>
             </thead>
             <tbody>
+
             @foreach($dadosFinanceiros as $financeiro)
                 <tr>
                     <td>{{ $financeiro->mes }}</td>

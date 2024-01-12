@@ -17,6 +17,7 @@ $('document').ready(function(){
 				previous: '<i class="ion-chevron-left"></i>'
 			}
 		},
+        "order": [[ 0, "asc" ]]
 	});
 
 
@@ -58,7 +59,8 @@ $('document').ready(function(){
         "dom": 'Blfrtip',
         "buttons": ['copy', 'csv', 'pdf', 'print'],
         "order": [
-            [0, 'month-order-pt'] // 0 para a primeira coluna, 'asc' para ordenação ascendente
+            // [0, 'month-order-pt'],
+            [1,'asc']// 0 para a primeira coluna, 'asc' para ordenação ascendente
         ]
     });
 

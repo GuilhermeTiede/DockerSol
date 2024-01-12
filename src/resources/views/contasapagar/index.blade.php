@@ -5,23 +5,52 @@
 @section('link', route('contasapagar.create'))
 @section('content')
 
-    @if(session()->has('message'))
-        <div class="alert alert-success">
-            {{ session()->get('message') }}
-        </div>
-    @elseif (session()->has('error'))
-        <div class="alert alert-danger">
-            {{ session()->get('error') }}
-        </div>
-    @endif
+    <div class="container">
 
-    <form action="{{ route('contasapagar.exibirrelatorio') }}" method="GET">
-        <button type="submit" class="btn btn-primary">Acessar Relatórios</button>
+    <form action="{{ route('contasapagar.index') }}" method="GET">
+        <div class="form-row">
+            <div class="form-group col-md-2">
+                <label for="contrato">Filtrar por Contrato:</label>
+                <select name="contrato" id="contrato" class="form-control">
+                    <option value="">Todos</option>
+                    @foreach ($contratos as $contrato)
+                        <option value="{{ $contrato->id }}">{{ $contrato->nomeContrato }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="ordem_servico">Filtrar por Os:</label>
+                <select name="ordem_servico" id="ordem_servico" class="form-control">
+                    <option value="">Todas</option>
+                    @foreach ($ordemServicos as $ordemServico)
+                        <option value="{{ $ordemServico->id }}">{{ $ordemServico->numeroOrdemServico }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="data_inicio">Data de Início:</label>
+                <input type="date" name="data_inicio" id="data_inicio" class="form-control">
+            </div>
+            <div class="form-group col-md-3">
+                <label for="data_fim">Data de Fim:</label>
+                <input type="date" name="data_fim" id="data_fim" class="form-control">
+            </div>
+            <div class="mt-4 ml-2">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+            </div>
+        </div>
     </form>
 
+
+{{--    <form action="{{ route('contasapagar.exibirrelatorio') }}" method="GET">--}}
+{{--        <button type="submit" class="btn btn-primary">Acessar Relatórios</button>--}}
+{{--    </form>--}}
+
+        @if (count($contasApagar) > 0)
     <table id="clientesTable" class="data-table table stripe hover">
         <thead>
         <tr>
+            <th>ID</th>
             <th>Contrato</th>
             <th>Ordem</th>
             <th>Descricao</th>
@@ -35,8 +64,9 @@
         </tr>
         </thead>
         <tbody>
-        @foreach ($contas as $conta)
+        @foreach ($contasApagar as $conta)
             <tr>
+                <td>{{$conta->id}}</td>
                 <td>{{$conta->ordemServico->contrato->nomeContrato}}</td>
                 <td>{{$conta->ordemServico->numeroOrdemServico}}</td>
                 <td>{{$conta->descricao}}</td>
@@ -68,5 +98,19 @@
             </tr>
         @endforeach
         </tbody>
+
+        <tfoot>
+        <tr>
+            <td colspan="4"></td> <!-- Colunas vazias para alinhar com as outras -->
+            <td><strong>Total:</strong></td>
+            <td><strong>R$ {{ number_format($somaContasApagar, 2, ',', '.') }}</strong></td>
+            <td colspan="3"></td> <!-- Colunas vazias para alinhar com as outras -->
+        </tr>
+        </tfoot>
     </table>
+    </div>
+
+    @else
+        <p>Nenhum contas a pagar encontrado.</p>
+    @endif
 @endsection

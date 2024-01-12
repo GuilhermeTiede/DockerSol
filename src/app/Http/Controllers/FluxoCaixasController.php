@@ -51,7 +51,9 @@ class FluxoCaixasController extends Controller
 
         $fluxoCaixas = $fluxoCaixas->get();
 
-            return view('fluxocaixas.index', compact('fluxoCaixas', 'contratos', 'ordemServicos'));
+        $somaFluxoCaixas = $fluxoCaixas->sum('valor');
+
+            return view('fluxocaixas.index', compact('fluxoCaixas', 'contratos', 'ordemServicos', 'somaFluxoCaixas'));
     }
 
     public function create()
@@ -200,48 +202,41 @@ class FluxoCaixasController extends Controller
             'fluxoCaixa' => $fluxoCaixa,
         ]
     );
+
     }
-    public function relatorios(FluxoCaixa $fluxoCaixa, Request $request)
+    public function relatorios(Request $request)
     {
+        $contratos = Contrato::all();
 
-        $dataInicial = $request->input('data_inicial') ?? Carbon::yesterday()->format('Y-m-d');
-        $dataFinal = $request->input('data_final') ?? Carbon::today()->format('Y-m-d');
+        $filtroContrato = $request->input('contrato');
+        $filtroOrdemServico = $request->input('ordem_servico');
+        $dataInicio = $request->input('data_inicio');
+        $dataFim = $request->input('data_fim');
 
+        $fluxoCaixas = FluxoCaixa::query();
 
-
-        // Validar e formatar as datas conforme necessário
-        $dataInicial = DateTime::createFromFormat('Y-m-d', $dataInicial);
-        $dataFinal = DateTime::createFromFormat('Y-m-d', $dataFinal);
-
-        if (!$dataInicial || !$dataFinal) {
-            return "Erro na formatação das datas.";
+        if (!empty($filtroContrato)) {
+            $fluxoCaixas->whereHas('ordemServico.contrato', function ($query) use ($filtroContrato) {
+                $query->where('id', $filtroContrato);
+            });
         }
 
-        // Consulta ao banco de dados usando Eloquent
-        $resultadosEntrada = $fluxoCaixa
-            ->where('tipo', 'entrada')
-            ->whereBetween('data', [$dataInicial, $dataFinal])
-            ->get();
+        if (!empty($filtroOrdemServico)) {
+            $fluxoCaixas->where('id_ordemServico', $filtroOrdemServico);
+        }
 
-        $resultadosSaida = $fluxoCaixa
-            ->where('tipo', 'saida')
-            ->whereBetween('data', [$dataInicial, $dataFinal])
-            ->get();
+        if (!empty($dataInicio) && !empty($dataFim)) {
+            $fluxoCaixas->whereBetween('data', [$dataInicio, $dataFim]);
+        }
 
-        // Calcular totais
-        $totalEntrada = $resultadosEntrada->sum('valor');
-        $totalSaida = $resultadosSaida->sum('valor');
-        $valorTotal = $totalEntrada - $totalSaida;
+        // Obtém as Ordens de Serviço para o seletor de filtro
+        $ordemServicos = OrdemServico::all();
 
-        // Retornar os resultados ou valores conforme necessário
-        return view('fluxocaixas.exibirrelatorio', [
-            'entrada' => $resultadosEntrada,
-            'saida' => $resultadosSaida,
-            'totalEntrada' => $totalEntrada,
-            'totalSaida' => $totalSaida,
-            'saldo' => $valorTotal,
-            'data_inicial' => $dataInicial->format('Y-m-d'), // formatando para o formato desejado
-            'data_final' => $dataFinal->format('Y-m-d'), // formatando para o formato desejado
-        ]);
+        $fluxoCaixas = $fluxoCaixas->get();
+
+        $somaFluxoCaixas = $fluxoCaixas->sum('valor');
+
+        return view('fluxocaixas.exibirrelatorio', compact('fluxoCaixas', 'contratos', 'ordemServicos', 'somaFluxoCaixas'));
     }
+
 }

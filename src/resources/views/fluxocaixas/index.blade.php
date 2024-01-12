@@ -7,6 +7,7 @@
 @section('content')
 
         <div class="container">
+
             <form action="{{ route('fluxocaixas.index') }}" method="GET">
                 <div class="form-row">
                     <div class="form-group col-md-2">
@@ -40,12 +41,12 @@
                     </div>
                 </div>
             </form>
+
             <form action="{{ route('fluxocaixas.exibirrelatorio') }}" method="GET">
                 <button type="submit" class="btn btn-primary">Acessar Relatórios</button>
             </form>
 
-
-            @if (count($fluxoCaixas) > 0)
+            @if(count($fluxoCaixas) > 0)
                 <table id="fluxoCaixasTable" class="data-table table stripe hover">
                     <thead>
                     <tr>
@@ -77,7 +78,6 @@
                             <td>{{ $fluxoCaixa->tipo }}</td>
                             <td>{{ $fluxoCaixa->observacao }}</td>
                             <td>
-{{--                                <a href="{{ route('fluxocaixas.show', ['fluxoCaixa' => $fluxoCaixa->id]) }}" class="btn btn-info">Ver</a>--}}
                                 <a href="{{ route('fluxocaixas.edit', ['fluxoCaixa' => $fluxoCaixa->id]) }}"
                                    class="btn btn-primary">Editar</a>
                                 <form action="{{ route('fluxocaixas.destroy', ['fluxoCaixa' => $fluxoCaixa->id]) }}"
@@ -90,11 +90,21 @@
                         </tr>
                     @endforeach
                     </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="4"></td> <!-- Colunas vazias para alinhar com as outras -->
+                        <td><strong>Total:</strong></td>
+                        <td><strong>R$ {{ number_format($somaFluxoCaixas, 2, ',', '.') }}</strong></td>
+                        <td colspan="3"></td> <!-- Colunas vazias para alinhar com as outras -->
+                    </tr>
+                    </tfoot>
                 </table>
 
         </div>
 
+
             @else
                 <p>Nenhum fluxo de caixa encontrado.</p>
             @endif
+
 @endsection

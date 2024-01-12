@@ -6,41 +6,103 @@
 
 
 @section('content')
-    <div class="container">
-        <form action="{{ route('fluxocaixas.relatorios') }}" method="GET" class="form-inline">
-            <div class="form-group">
-                <label for="data_inicio" class="mr-2">Data de Início:</label>
-                <input type="date" name="data_inicial" id="data_inicial" class="form-control" value="{{ isset($data_inicial) ? $data_inicial : '' }}">
-            </div>
-            <div class="form-group ml-2">
-                <label for="data_fim" class="mr-2">Data de Fim:</label>
-                <input type="date" name="data_final" id="data_final" class="form-control" value="{{ isset($data_final) ? $data_final : '' }}">
-            </div>
-            <div class="mt-4 ml-2">
-                <button type="submit" class="btn btn-primary">Gerar Relatório</button>
-            </div>
-        </form>
-    </div>
 
-    <table class="table hover data-table-export nowrap">
-        <thead>
-        <tr>
-            <th>Data Início</th>
-            <th>Data Fim</th>
-            <th>Total Saida</th>
-            <th>Total Entrada</th>
-            <th>Saldo</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>{{ isset($data_inicial) ? \Carbon\Carbon::createFromFormat('Y-m-d', $data_inicial)->format('d/m/Y') : '' }}</td>
-            <td>{{ isset($data_final) ? \Carbon\Carbon::createFromFormat('Y-m-d', $data_final)->format('d/m/Y') : '' }}</td>
-            <td>{{ isset($totalSaida) ? 'R$ ' . number_format($totalSaida, 2, ',', '.') : '' }}</td>
-            <td>{{ isset($totalEntrada) ? 'R$ ' . number_format($totalEntrada, 2, ',', '.') : '' }}</td>
-            <td>{{ isset($saldo) ? 'R$ ' . number_format($saldo, 2, ',', '.') : '' }}</td>
-        </tr>
-        </tbody>
-    </table>
+   <div class="container">
+       <form action="{{ route('fluxocaixas.relatorios') }}" method="GET">
+           <div class="form-row">
+               <div class="form-group col-md-2">
+                   <label for="contrato">Filtrar por Contrato:</label>
+                   <select name="contrato" id="contrato" class="form-control">
+                       <option value="">Todos</option>
+                       @foreach ($contratos as $contrato)
+                           <option value="{{ $contrato->id }}">{{ $contrato->nomeContrato }}</option>
+                       @endforeach
+                   </select>
+               </div>
+               <div class="form-group col-md-2">
+                   <label for="ordem_servico">Filtrar por Os:</label>
+                   <select name="ordem_servico" id="ordem_servico" class="form-control">
+                       <option value="">Todas</option>
+                       @foreach ($ordemServicos as $ordemServico)
+                           <option value="{{ $ordemServico->id }}">{{ $ordemServico->numeroOrdemServico }}</option>
+                       @endforeach
+                   </select>
+               </div>
+               <div class="form-group col-md-3">
+                   <label for="data_inicio">Data de Início:</label>
+                   <input type="date" name="data_inicio" id="data_inicio" class="form-control">
+               </div>
+               <div class="form-group col-md-3">
+                   <label for="data_fim">Data de Fim:</label>
+                   <input type="date" name="data_fim" id="data_fim" class="form-control">
+               </div>
+               <div class="mt-4 ml-2">
+                   <button type="submit" class="btn btn-primary">Filtrar</button>
+               </div>
+           </div>
+       </form>
+
+       @if (count($fluxoCaixas) > 0)
+           <table id="fluxoCaixasTable" class="table hover data-table-export nowrap">
+               <thead>
+               <tr>
+                   <th>ID</th>
+                   <th>Contrato</th>
+                   <th>Os</th>
+                   <th>Data</th>
+                   <th>Fonte</th>
+                   <th>Valor</th>
+                   <th>Tipo</th>
+                   <th>Observacao</th>
+                   <th>Ações</th>
+               </tr>
+               </thead>
+               <tbody>
+               @foreach ($fluxoCaixas as $fluxoCaixa)
+                   <tr>
+                       <td>{{ $fluxoCaixa->id }}</td>
+                       <td>{{ $fluxoCaixa->ordemServico->contrato->nomeContrato }}</td>
+                       <td>{{ $fluxoCaixa->ordemServico->numeroOrdemServico}}</td>
+                       <td>{{ $fluxoCaixa->data }}</td>
+                       <td>{{ $fluxoCaixa->fontePagadora->nomeTitular }}</td>
+                       <td>
+                           @php
+                               $valorFormatado = number_format($fluxoCaixa->valor,2,',','.');
+                           @endphp
+                           {{"R$ $valorFormatado"}}
+                       </td>
+                       <td>{{ $fluxoCaixa->tipo }}</td>
+                       <td>{{ $fluxoCaixa->observacao }}</td>
+                       <td>
+                           <a href="{{ route('fluxocaixas.edit', ['fluxoCaixa' => $fluxoCaixa->id]) }}"
+                              class="btn btn-primary">Editar</a>
+                           <form action="{{ route('fluxocaixas.destroy', ['fluxoCaixa' => $fluxoCaixa->id]) }}"
+                                 method="POST" style="display: inline-block;">
+                               @csrf
+                               @method('DELETE')
+                               <button type="submit" class="btn btn-danger">Excluir</button>
+                           </form>
+                       </td>
+                   </tr>
+               @endforeach
+               </tbody>
+               <tfoot>
+               <tr>
+                   <td colspan="4"></td> <!-- Colunas vazias para alinhar com as outras -->
+                   <td><strong>Total:</strong></td>
+                   <td><strong>R$ {{ number_format($somaFluxoCaixas, 2, ',', '.') }}</strong></td>
+                   <td colspan="3"></td> <!-- Colunas vazias para alinhar com as outras -->
+               </tr>
+               </tfoot>
+           </table>
+   </div>
+
+        @else
+       <p>Nenhum fluxo de caixa encontrado.</p>
+       @endif
+
+
+
+
 @endsection
 

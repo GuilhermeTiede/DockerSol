@@ -19,10 +19,42 @@ class ContasAPagarController extends Controller
         $this->conta = new ContaAPagar();
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $contas = $this->conta->all();
-        return view('contasapagar.index', ['contas' => $contas]);
+//        $contas = $this->conta->all();
+
+        $contratos = Contrato::all();
+
+        $filtroContrato = $request->input('contrato');
+
+        $filtroOrdemServico = $request->input('ordem_servico');
+        $dataInicio = $request->input('data_inicio');
+        $dataFim = $request->input('data_fim');
+
+        $contasApagar = ContaAPagar::query();
+
+        if (!empty($filtroContrato)) {
+            $contasApagar->whereHas('ordemServico.contrato', function ($query) use ($filtroContrato) {
+                $query->where('id', $filtroContrato);
+            });
+        }
+
+        if (!empty($filtroOrdemServico)) {
+            $contasApagar->where('id_ordemServico', $filtroOrdemServico);
+        }
+
+        if (!empty($dataInicio) && !empty($dataFim)) {
+            $contasApagar->whereBetween('data', [$dataInicio, $dataFim]);
+        }
+
+        // Obtém as Ordens de Serviço para o seletor de filtro
+        $ordemServicos = OrdemServico::all();
+
+        $contasApagar = $contasApagar->get();
+
+        $somaContasApagar = $contasApagar->sum('valor');
+
+        return view('contasapagar.index',compact('contasApagar','contratos','ordemServicos','somaContasApagar'));
     }
 
     public function create()
@@ -210,51 +242,7 @@ class ContasAPagarController extends Controller
 
     public function relatoriosContasAPagar(ContaAPagar $contasAPagar, Request $request)
     {
-        $dataInicial = $request->input('data_inicial') ?? Carbon::yesterday()->format('Y-m-d');
-        $dataFinal = $request->input('data_final') ?? Carbon::today()->format('Y-m-d');
 
-        // Validar e formatar as datas conforme necessário
-        $dataInicial = DateTime::createFromFormat('Y-m-d', $dataInicial);
-        $dataFinal = DateTime::createFromFormat('Y-m-d', $dataFinal);
-
-        if (!$dataInicial || !$dataFinal) {
-            return "Erro na formatação das datas.";
-        }
-
-        // Consulta ao banco de dados usando Eloquent
-        $resultadosPendentes = $contasAPagar
-            ->where('status', 'pendente')
-            ->whereBetween('dataVencimento', [$dataInicial, $dataFinal])
-            ->get();
-
-        $resultadosPagos = $contasAPagar
-            ->where('status', 'pago')
-            ->whereBetween('dataPagamento', [$dataInicial, $dataFinal])
-            ->get();
-
-        $resultadosAtrasados = $contasAPagar
-            ->where('status', 'atrasado')
-            ->where('dataVencimento', '<', Carbon::today()->format('Y-m-d'))
-            ->get();
-
-        // Calcular totais
-        $totalPendentes = $resultadosPendentes->sum('valor');
-        $totalPagos = $resultadosPagos->sum('valor');
-        $totalAtrasados = $resultadosAtrasados->sum('valor');
-        $valorTotal = $totalPendentes + $totalPagos + $totalAtrasados;
-
-        // Retornar os resultados ou valores conforme necessário
-        return view('contasapagar.exibirrelatorio', [
-            'pendentes' => $resultadosPendentes,
-            'pagos' => $resultadosPagos,
-            'atrasados' => $resultadosAtrasados,
-            'totalPendentes' => $totalPendentes,
-            'totalPagos' => $totalPagos,
-            'totalAtrasados' => $totalAtrasados,
-            'valorTotal' => $valorTotal,
-            'data_inicial' => $dataInicial->format('Y-m-d'),
-            'data_final' => $dataFinal->format('Y-m-d'),
-        ]);
     }
 
 

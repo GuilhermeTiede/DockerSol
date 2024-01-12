@@ -55,15 +55,12 @@ $('document').ready(function(){
                 "previous": '<i class="ion-chevron-left"></i>',
             }
         },
-        "dom": 'Bfrtp',
+        "dom": 'Blfrtip',
         "buttons": ['copy', 'csv', 'pdf', 'print'],
         "order": [
             [0, 'month-order-pt'] // 0 para a primeira coluna, 'asc' para ordenação ascendente
         ]
     });
-
-
-
 
     var table = $('.select-row').DataTable();
 	$('.select-row tbody').on('click', 'tr', function () {
@@ -76,7 +73,8 @@ $('document').ready(function(){
 		}
 	});
 
-	var multipletable = $('.multiple-select-row').DataTable();
+
+    var multipletable = $('.multiple-select-row').DataTable();
 	$('.multiple-select-row tbody').on('click', 'tr', function () {
 		$(this).toggleClass('selected');
 	});

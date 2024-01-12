@@ -129,7 +129,7 @@ Route::middleware([
         Route::delete('/fluxocaixa/{fluxoCaixa}', [FluxoCaixasController::class,'destroy'])->name('fluxocaixas.destroy')->middleware('can:admin');
 
         Route::get('/get-ordem-servico-por-contrato', [FluxoCaixasController::class,'getOrdemServicoPorContrato']);
-        Route::get('/exibirrelatorio', [FluxoCaixasController::class,'exibirRelatorio'])->name('fluxocaixas.exibirrelatorio')->middleware('can:admin');
+        Route::get('/exibirrelatorio', [FluxoCaixasController::class,'relatorios'])->name('fluxocaixas.exibirrelatorio')->middleware('can:admin');
         Route::get('/relatorios', [FluxoCaixasController::class,'relatorios'])->name('fluxocaixas.relatorios')->middleware('can:admin');
 
 

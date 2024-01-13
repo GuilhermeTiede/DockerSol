@@ -39,7 +39,7 @@ class Contrato extends Model
         return $this->hasMany(DocumentosContrato::class);
     }
 
-    public function ordensServico()
+    public function ordemservico()
     {
         return $this->hasMany(OrdemServico::class, 'contrato_id');
     }

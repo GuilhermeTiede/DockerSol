@@ -34,7 +34,7 @@
                     echo $nomePrestador;
                 @endphp
                 </td>
-                <td>{{ $notafiscal->clienteCnpj ? $notafiscal->clienteCnpj->nome : 'Cliente não encontrado' }}</td>
+                <td>{{ $notafiscal->cliente ? $notafiscal->cliente->nome : 'Cliente não encontrado' }}</td>
 
                 <td>
                     @php

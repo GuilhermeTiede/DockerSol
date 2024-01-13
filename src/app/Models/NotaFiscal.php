@@ -29,7 +29,7 @@ class NotaFiscal extends Model
     ];
     protected $table = 'notasfiscais';
 
-    public function clienteCnpj()
+    public function cliente()
     {
         return $this->belongsTo(Cliente::class,'cnpj_tomador', 'cnpj');
     }
@@ -37,6 +37,8 @@ class NotaFiscal extends Model
     {
         return $this->belongsTo(StatusNota::class,'id', 'nota_id');
     }
+
+
 
 }
 

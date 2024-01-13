@@ -30,4 +30,9 @@ class Cliente extends Model
         return $this->belongsTo(Empresa::class, 'empresa_id');
     }
 
+    public function contratos()
+    {
+        return $this->hasMany(Contrato::class, 'cliente_id');
+    }
+
 }

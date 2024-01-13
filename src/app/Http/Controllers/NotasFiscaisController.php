@@ -68,15 +68,21 @@ class NotasFiscaisController extends Controller
         $fontePagadoras = FontePagadora::all();
         $contratos = Contrato::all();
         $ordemServicos = OrdemServico::all();
+        $statusNotas = StatusNota::all();
 
-        return view('notasfiscais.show', [
-            'notafiscal' => $notafiscal,
-            'fontePagadoras' => $fontePagadoras,
-            'contratos' => $contratos,
-            'ordemServicos' => $ordemServicos,
 
-        ]);
+
+            return view('notasfiscais.show', [
+                'notafiscal' => $notafiscal,
+                'fontePagadoras' => $fontePagadoras,
+                'contratos' => $contratos,
+                'ordemServicos' => $ordemServicos,
+                'statusNotas' => $statusNotas,
+            ]);
+
+
     }
+
 
 
     public function edit(NotaFiscal $notafiscal)
@@ -97,7 +103,6 @@ class NotasFiscaisController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
-
     }
 
 
@@ -114,49 +119,38 @@ class NotasFiscaisController extends Controller
     public function statusNota(Request $request, $notafiscal)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'status' => 'required',
-                'id_ordemServico' => 'required',
-                'id_fontePagadora' => 'required',
-                'dataPagamento' => 'required|date',
-            ]);
-
-            if ($validator->fails()) {
-                throw new \Exception('Erro de validação. Por favor, verifique os campos e tente novamente.');
-            }
 
             $notaFiscal = $this->notaFiscal->find($notafiscal);
+//            dd($notaFiscal);
 
             if (!$notaFiscal) {
                 return redirect()->back()->with('error', 'Nota Fiscal não encontrada!');
             }
 
-            $statusNota = StatusNota::where('nota_id', $notaFiscal->id)->first();
+            $statusNota = StatusNota::firstOrNew(['nota_id' => $notaFiscal->id]);
+            $statusNota->status = $request->status;
+            $statusNota->contrato_id = $request->id_contrato;
+            $statusNota->ordemservico_id = $request->id_ordemServico;
+            $statusNota->fontepagadora_id = $request->id_fontePagadora;
+            $statusNota->data = $request->dataPagamento;
 
-            if ($statusNota) {
-                $statusNota->status = $request->status;
-                $statusNota->save();
+            $statusNota->save();
 
-                if ($request->status === 'Pago') {
-                    $fluxoCaixa = new FluxoCaixa();
-                    $fluxoCaixa->id_ordemServico = $request->id_ordemServico;
-                    $fluxoCaixa->id_fontePagadora = $request->id_fontePagadora;
-                    $fluxoCaixa->tipo = 'entrada';
-                    $fluxoCaixa->valor = $notaFiscal->valorTotal;
-                    $fluxoCaixa->observacao = 'Nota Fiscal paga: ' . $notaFiscal->nome_tomador;
-                    $fluxoCaixa->data = $request->dataPagamento;
-                    $fluxoCaixa->save();
-                }
-
-                return redirect()->back()->with('message', 'Status da Nota Fiscal atualizado com sucesso!');
+            if ($request->status === 'Pago') {
+                // Criar um registro no fluxo de caixa
+                $fluxoCaixa = new FluxoCaixa();
+                $fluxoCaixa->id_ordemServico = $request->id_ordemServico;
+                $fluxoCaixa->id_fontePagadora = $request->id_fontePagadora;
+                $fluxoCaixa->tipo = 'entrada';
+                $fluxoCaixa->valor = $notaFiscal->valorTotal;
+                $fluxoCaixa->observacao = 'Nota Fiscal paga: ' . $notaFiscal->nome_tomador;
+                $fluxoCaixa->data = $request->dataPagamento;
+                $fluxoCaixa->save();
             } else {
-                $novoStatus = new StatusNota();
-                $novoStatus->nota_id = $notaFiscal->id;
-                $novoStatus->status = $request->status;
-                $novoStatus->save();
-
-                return redirect()->back()->with('message', 'Status da Nota Fiscal criado com sucesso!');
+                $statusNota->save();
             }
+
+            return redirect()->back()->with('message', 'Status da Nota Fiscal atualizado com sucesso!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage())->withInput();
         }

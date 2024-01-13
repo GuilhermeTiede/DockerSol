@@ -24,19 +24,38 @@
                 <label class="col-sm-12 col-md-2 col-form-label">Contratos</label>
                 <div class="col-sm-12 col-md-10">
                     <select class="form-control" name="id_contrato" id="id_contrato">
-                        @foreach($ordemServicos as $ordemServico)
-                        <option value="{{$ordemServico->clienteCnpj}}" selected></option>
-                            <option value="{{$contrato->id}}">{{$contrato->nomeContrato}}</option>
+                        @foreach($statusNotas as $notas)
+                            @if($notas->nota_id == $notafiscal->id)
+                                <option value="{{$notas->contrato_id}}" >
+                                    {{ $notas->contrato ? $notas->contrato->nomeContrato : 'Sem contrato selecionado' }}
+                                </option>
+                                @break
+                            @endif
                         @endforeach
+                        <!-- Se nenhum contrato estiver selecionado na status_notas, exibe a lista completa de contratos -->
+                        @if (!$statusNotas->first()->contrato)
+                            @foreach($contratos as $contrato)
+                                <option value="{{$contrato->id}}">{{$contrato->nomeContrato}}</option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>
             </div>
+
+
 
             <div class="form-group row">
                 <label class="col-sm-12 col-md-2 col-form-label">Ordem de Servico</label>
                 <div class="col-sm-12 col-md-10">
                     <select class="form-control" name="id_ordemServico" id="id_ordemServico">
-                        <option value="" disabled selected>Selecione a Os Correspondente</option>
+                        @foreach($statusNotas as $notas)
+                            @if($notas->nota_id == $notafiscal->id)
+                                <option value="{{$notas->ordemservico_id}}">
+                                    {{ $notas->ordemservico ? $notas->ordemservico->numeroOrdemServico : 'Sem ordem de serviço selecionada' }}
+                                </option>
+                                @break
+                            @endif
+                        @endforeach
                     </select>
                 </div>
             </div>
@@ -45,10 +64,20 @@
                 <label class="col-sm-12 col-md-2 col-form-label">Fonte Pagadora</label>
                 <div class="col-sm-12 col-md-10">
                     <select class="form-control" name="id_fontePagadora">
-                        @foreach($fontePagadoras as $fontePagadora)
-                        <option value="{{$fontePagadora->id}}" disabled selected>{{$fontePagadora->nomeTitular}}</option>
-                            <option value="{{$fontePagadora->id}}">{{$fontePagadora->nomeTitular}}</option>
+                        @foreach($statusNotas as $notas)
+                            @if ($notas->nota_id == $notafiscal->id)
+                                <option value="{{$notas->fontepagadora_id}}">
+                                    {{ $notas->fontepagadora ? $notas->fontepagadora->nomeTitular : 'Sem fonte pagadora selecionada' }}
+                                </option>
+                                @break
+                            @endif
                         @endforeach
+                                <!-- Se nenhum contrato estiver selecionado na status_notas, exibe a lista completa de contratos -->
+                                @if (!$statusNotas->first()->fontepagadora)
+                                    @foreach($fontePagadoras as $fontePagadora)
+                                        <option value="{{$fontePagadora->id}}">{{$fontePagadora->nomeTitular}}</option>
+                                    @endforeach
+                                @endif
                     </select>
                 </div>
             </div>
@@ -56,21 +85,39 @@
             <div class="form-group row">
                 <label class="col-sm-12 col-md-2 col-form-label">Data</label>
                 <div class="col-sm-12 col-md-10">
-                    <input class="form-control date-picker" type="text" name="dataPagamento">
+                    @foreach($statusNotas as $notas)
+                        @if($notas->nota_id == $notafiscal->id)
+                            <div class="form-group row">
+                                <div class="col-sm-12 col-md-10">
+                                    <input class="form-control date-picker" type="text" name="dataPagamento" value="{{ $notas->data }}">
+                                </div>
+                            </div>
+                            @break
+                        @endif
+                    @endforeach
+
                 </div>
             </div>
+
+
+
             <div class="form-group row">
-                <label class="col-sm-12 col-md-2 col-form-label">Status Nota</label>
+                <label class="col-sm-12 col-md-2 col-form-label">Status da Nota</label>
                 <div class="col-sm-12 col-md-10">
                     <select class="form-control" name="status">
-
+                        @foreach($statusNotas as $notas)
+                            @if($notas->nota_id == $notafiscal->id)
                                 <option value="{{$notafiscal->statusNotas->id}}" disabled selected>{{$notafiscal->statusNotas->status}}</option>
+                                @break
+                            @endif
 
-                            <option value="Pago">Pago</option>
-                            <option value="Pendente">Pendente</option>
+                        @endforeach
+                        <option value="Pago">Pago</option>
+                        <option value="Pendente">Pendente</option>
                     </select>
                 </div>
             </div>
+
 
             <button type="submit" class="btn btn-success">Salvar Status</button>
         </form>

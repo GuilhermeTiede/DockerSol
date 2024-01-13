@@ -20,4 +20,19 @@ class StatusNota extends Model
     {
         return $this->belongsTo(NotaFiscal::class, 'nota_id');
     }
+
+    public function contrato()
+    {
+        return $this->belongsTo(Contrato::class, 'contrato_id');
+    }
+
+    public function ordemservico()
+    {
+        return $this->belongsTo(OrdemServico::class, 'ordemservico_id');
+    }
+
+    public function fontepagadora()
+    {
+        return $this->belongsTo(FontePagadora::class, 'fontepagadora_id');
+    }
 }

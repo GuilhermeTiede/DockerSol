@@ -207,7 +207,6 @@ class PainelControleController extends Controller
 
     }
 
-
     private function processarRetirada($nomeContrato, $mesNumero, $anoAtual) {
         // Inicializa o valor da retirada
         $valorRetirada = 0;
@@ -221,27 +220,26 @@ class PainelControleController extends Controller
         foreach ($contratos as $contrato) {
             $ordensServico = $contrato->ordensServico;
 
-            foreach ($ordensServico as $ordemServico) {
-                // Verifica se a ordem de serviço possui fluxo de caixa associado
-                if ($ordemServico->fluxoCaixas) {
-                    $fluxoCaixasSaida = $ordemServico->fluxoCaixas
-                        ->where('tipo', 'saida')
-                        ->filter(function ($fluxoCaixa) use ($mesNumero) {
-                            return date('m', strtotime($fluxoCaixa->data)) == $mesNumero;
-                        });
-
-                    // Soma o valor dos fluxoCaixas de saída
-                    foreach ($fluxoCaixasSaida as $fluxoCaixa) {
-                        $valorRetirada += $fluxoCaixa->valor;
+            if (is_array($ordensServico) || is_object($ordensServico)){
+                foreach ($ordensServico as $ordemServico) {
+                    // Verifica se a ordem de serviço possui fluxo de caixa associado
+                    if ($ordemServico->fluxoCaixas) {
+                        $fluxoCaixasSaida = $ordemServico->fluxoCaixas
+                            ->where('tipo', 'saida')
+                            ->filter(function ($fluxoCaixa) use ($mesNumero) {
+                                return date('m', strtotime($fluxoCaixa->data)) == $mesNumero;
+                            });
+                        foreach ($fluxoCaixasSaida as $fluxoCaixa) {
+                            $valorRetirada += $fluxoCaixa->valor;
+                        }
                     }
                 }
             }
+
         }
 
         return $valorRetirada;
     }
-
-
 
 
     public function finMensal()
@@ -427,7 +425,6 @@ class PainelControleController extends Controller
 
         }
         return view('painelcontrole.mensal', compact('dadosFinanceiros'));
-//        return view('painelcontrole.mensalanterior', compact('dadosFinanceirosAnterior'));
     }
 
     public function finMensalAnterior()

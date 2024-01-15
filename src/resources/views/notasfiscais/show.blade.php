@@ -72,7 +72,7 @@
                                 @break
                             @endif
                         @endforeach
-                                <!-- Se nenhum contrato estiver selecionado na status_notas, exibe a lista completa de contratos -->
+                                <!-- Se nenhuma fonte pagadora estiver selecionado na status_notas, exibe a lista completa de contratos -->
                                 @if (!$statusNotas->first()->fontepagadora)
                                     @foreach($fontePagadoras as $fontePagadora)
                                         <option value="{{$fontePagadora->id}}">{{$fontePagadora->nomeTitular}}</option>
@@ -95,6 +95,13 @@
                             @break
                         @endif
                     @endforeach
+                        @if (!($notas->nota_id == $notafiscal->id))
+                            <div class="form-group row">
+                                <div class="col-sm-12 col-md-10">
+                                    <input class="form-control date-picker" type="text" name="dataPagamento">
+                                </div>
+                            </div>
+                        @endif
 
                 </div>
             </div>

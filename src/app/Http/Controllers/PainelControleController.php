@@ -266,19 +266,10 @@ class PainelControleController extends Controller
 
         foreach ($meses as $mes => $mesNumero) {
 
-            $faturamentoAnterior = NotaFiscal::whereMonth('dataEmissao', '=', $mesNumero)
-                ->whereYear('dataEmissao','=', $anoAnterior)
-                ->sum('valorTotal');
 
             $faturamento = NotaFiscal::whereMonth('dataEmissao', '=', $mesNumero)
                 ->whereYear('dataEmissao','=', $anoAtual)
                 ->sum('valorTotal');
-
-            $recebimentoAnterior = NotaFiscal::join('status_notas', 'notasfiscais.id', '=', 'status_notas.nota_id')
-                ->where('status', 'Pago')
-                ->whereMonth('notasfiscais.dataEmissao', '=', $mesNumero)
-                ->whereYear('notasfiscais.dataEmissao','=', $anoAnterior)
-                ->sum('notasfiscais.valorTotal');
 
             $recebimento = NotaFiscal::join('status_notas', 'notasfiscais.id', '=', 'status_notas.nota_id')
                 ->where('status', 'Pago')
@@ -286,25 +277,19 @@ class PainelControleController extends Controller
                 ->whereYear('notasfiscais.dataEmissao','=', $anoAtual)
                 ->sum('notasfiscais.valorTotal');
 
-
-            $despesasAnterior = FluxoCaixa::whereMonth('data', '=', $mesNumero)
-                ->whereYear('data','=',$anoAnterior)
-                ->where('tipo', 'saida')
-                ->sum('valor');
-
             $despesas = FluxoCaixa::whereMonth('data', '=', $mesNumero)
                 ->whereYear('data','=',$anoAtual)
                 ->where('tipo', 'saida')
                 ->sum('valor');
 
 
-            $admAnterior = $this->processarRetirada('Retirada Administração', $mesNumero, $anoAnterior);
+
             $adm = $this->processarRetirada('Retirada Administração', $mesNumero, $anoAtual);
-            $retiradaAnterior = $this->processarRetirada('Retirada Sócios', $mesNumero, $anoAnterior);
+
             $retirada = $this->processarRetirada('Retirada Sócios', $mesNumero, $anoAtual);
-            $investimentoAnterior = $this->processarRetirada('Retirada Investimento', $mesNumero, $anoAnterior);
+
             $investimento = $this->processarRetirada('Retirada Investimento', $mesNumero, $anoAtual);
-            $impostosAnterior = $this->processarRetirada('Retirada Impostos', $mesNumero, $anoAnterior);
+
             $impostos = $this->processarRetirada('Retirada Impostos', $mesNumero, $anoAtual);
 
             $percentAdm = ($faturamento > 0) ? ($adm / $faturamento) * 100 : 0;
@@ -312,11 +297,6 @@ class PainelControleController extends Controller
             $percentInvestimento = ($faturamento > 0) ? ($investimento / $faturamento) * 100 : 0;
             $percentImpostos = ($faturamento > 0) ? ($impostos / $faturamento) * 100 : 0;
 
-            // Cálculos para o ano anterior
-            $percentAdmAnterior = ($faturamentoAnterior > 0) ? ($admAnterior / $faturamentoAnterior) * 100 : 0;
-            $percentRetiradaAnterior = ($faturamentoAnterior > 0) ? ($retiradaAnterior / $faturamentoAnterior) * 100 : 0;
-            $percentInvestimentoAnterior = ($faturamentoAnterior > 0) ? ($investimentoAnterior / $faturamentoAnterior) * 100 : 0;
-            $percentImpostosAnterior = ($faturamentoAnterior > 0) ? ($impostosAnterior / $faturamentoAnterior) * 100 : 0;
 
             // Impostos retidos para o ano atual
             $impostosRetidos = NotaFiscal::whereMonth('dataEmissao', '=', $mesNumero)
@@ -338,37 +318,17 @@ class PainelControleController extends Controller
                     ->whereYear('dataEmissao', '=', $anoAtual)
                     ->sum('valorCsll');
 
-            // Impostos retidos para o ano anterior
-            $impostosRetidosAnterior = NotaFiscal::whereMonth('dataEmissao', '=', $mesNumero)
-                    ->whereYear('dataEmissao', '=', $anoAnterior)
-                    ->sum('valorIss')
-                + NotaFiscal::whereMonth('dataEmissao', '=', $mesNumero)
-                    ->whereYear('dataEmissao', '=', $anoAnterior)
-                    ->sum('valorPis')
-                + NotaFiscal::whereMonth('dataEmissao', '=', $mesNumero)
-                    ->whereYear('dataEmissao', '=', $anoAnterior)
-                    ->sum('valorCofins')
-                + NotaFiscal::whereMonth('dataEmissao', '=', $mesNumero)
-                    ->whereYear('dataEmissao', '=', $anoAnterior)
-                    ->sum('valorInss')
-                + NotaFiscal::whereMonth('dataEmissao', '=', $mesNumero)
-                    ->whereYear('dataEmissao', '=', $anoAnterior)
-                    ->sum('valorIr')
-                + NotaFiscal::whereMonth('dataEmissao', '=', $mesNumero)
-                    ->whereYear('dataEmissao', '=', $anoAnterior)
-                    ->sum('valorCsll');
 
 
 
             $percentImpostosRetidos = ($faturamento > 0) ? ($impostosRetidos / $faturamento) * 100 : 0;
-            $percentImpostosRetidosAnterior = ($faturamentoAnterior > 0) ? ($impostosRetidosAnterior / $faturamentoAnterior) * 100 : 0;
 
             $percentualTotalImpostos = $percentImpostosRetidos + $percentImpostos;
-            $percentualTotalImpostosAnterior = $percentImpostosRetidosAnterior + $percentImpostosAnterior;
+
 
 
             $lucro = $faturamento - $despesas - $impostosRetidos;
-            $lucroAnterior = $faturamentoAnterior - $despesasAnterior - $impostosRetidosAnterior;
+
 
 
             $financeiro = Financeiro::firstOrNew([
@@ -397,40 +357,13 @@ class PainelControleController extends Controller
             $dadosFinanceiros[$anoAtual . '-' . $mes] = $financeiro;
 
 
-
-            $financeiroAnterior = Financeiro::firstOrNew([
-                'mes' => $mes,
-                'ano' => $anoAnterior,
-
-            ]);
-
-            $financeiroAnterior->faturamento = $faturamentoAnterior;
-            $financeiroAnterior->recibemento = $recebimentoAnterior;
-            $financeiroAnterior->despesas = $despesasAnterior;
-            $financeiroAnterior->adm = $admAnterior;
-            $financeiroAnterior->percentual_adm = round($percentAdmAnterior,2);
-            $financeiroAnterior->retirada = $retiradaAnterior;
-            $financeiroAnterior->percentual_retirada = round($percentRetiradaAnterior,2);
-            $financeiroAnterior->investimento = $investimentoAnterior;
-            $financeiroAnterior->percentual_investimento = round($percentInvestimentoAnterior,2);
-            $financeiroAnterior->impostos_pagos = $impostosAnterior;
-            $financeiroAnterior->percentual_impostos_pagos = round($percentImpostosAnterior,2);
-            $financeiroAnterior->impostos_retidos = $impostosRetidosAnterior;
-            $financeiroAnterior->percentual_impostos_retidos = round($percentImpostosRetidosAnterior,2);
-            $financeiroAnterior->soma_percentual_impostos = round($percentualTotalImpostosAnterior,2);
-            $financeiroAnterior->lucro = $lucroAnterior;
-            $financeiroAnterior->save();
-
-            $dadosFinanceirosAnterior[$anoAnterior . '-' . $mes] = $financeiroAnterior;
-
         }
         return view('painelcontrole.mensal', compact('dadosFinanceiros'));
     }
 
     public function finMensalAnterior()
     {
-        $anoAtual = date('Y');
-        $anoAnterior = $anoAtual-1;
+        $anoAnterior = date('Y') - 1;
 
         $meses = [
             'Janeiro' => 1,
@@ -475,7 +408,6 @@ class PainelControleController extends Controller
             $investimentoAnterior = $this->processarRetirada('Retirada Investimento', $mesNumero, $anoAnterior);
 
             $impostosAnterior = $this->processarRetirada('Retirada Impostos', $mesNumero, $anoAnterior);
-
 
 
             // Cálculos para o ano anterior

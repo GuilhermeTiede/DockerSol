@@ -304,7 +304,6 @@ class PainelControleController extends Controller
             $retirada = $this->processarRetirada('Retirada Sócios', $mesNumero, $anoAtual);
             $investimentoAnterior = $this->processarRetirada('Retirada Investimento', $mesNumero, $anoAnterior);
             $investimento = $this->processarRetirada('Retirada Investimento', $mesNumero, $anoAtual);
-            dd($investimento);
             $impostosAnterior = $this->processarRetirada('Retirada Impostos', $mesNumero, $anoAnterior);
             $impostos = $this->processarRetirada('Retirada Impostos', $mesNumero, $anoAtual);
 

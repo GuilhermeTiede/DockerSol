@@ -126,7 +126,7 @@ class PainelControleController extends Controller
                 // Calcule o lucro, faturamento total e margem de lucro para este cliente
                 $lucro = $recebimentoCliente + $aReceberPrevisao + $valorNFEmitida - $despesasCliente;
                 $faturamentoTotal = $recebimentoCliente + $valorNFEmitida + $aReceberPrevisao;
-                $margemLucro = ($lucro / $faturamentoTotal) * 100;
+                $margemLucro = round(($lucro / $faturamentoTotal) * 100, 2);
 
                 $painelControle->despesas = $despesasCliente;
                 $painelControle->recebimento = $recebimentoCliente;
